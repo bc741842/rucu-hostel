@@ -1,0 +1,82 @@
+@import "tailwindcss";
+ 
+@theme {
+  /* Navy: rangi kuu mpya (kama picha ya mfano) */
+  --color-navy-900: #14284b;
+  --color-navy-700: #1e3a66;
+  --color-navy-500: #2c4d84;
+  --color-navy-100: #e3e8f0;
+  --color-navy-50: #eef1f6;
+ 
+  /* Dhahabu: lafudhi (logo border, mstari, badges) */
+  --color-gold-300: #e6c878;
+  --color-gold-500: #d4a72c;
+  --color-gold-700: #a8811f;
+ 
+  /* Msingi wa background/maandishi */
+  --color-cream: #f5f6f8;
+  --color-cream-100: #eceef2;
+  --color-ink: #14284b;
+  --color-ink-light: #5b6b85;
+ 
+  /* Nyeupe/mpaka kwa cards */
+  --color-line: #e2e5eb;
+ 
+  /* Hali (statuses) */
+  --color-success-50: #eaf4ee;
+  --color-success-600: #3f7a57;
+  --color-warning-50: #fbf1e2;
+  --color-warning-600: #c98a2b;
+  --color-danger-50: #f9ecec;
+  --color-danger-600: #a43b3b;
+ 
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+ 
+  --radius-card: 0.75rem;
+}
+ 
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+ 
+  html {
+    scroll-behavior: smooth;
+  }
+ 
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+  }
+ 
+  ::selection {
+    background-color: var(--color-gold-300);
+    color: var(--color-navy-900);
+  }
+ 
+  :focus-visible {
+    outline: 2px solid var(--color-navy-900);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+ 
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--color-navy-500);
+    border-radius: 999px;
+  }
+}
+ 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+ 

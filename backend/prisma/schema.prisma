@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  super_admin
+  accountant
+  warden
+}
+
+enum BookingStatus {
+  Pending
+  Paid
+  Confirmed
+  CheckedIn
+  Completed
+  Expired
+  Cancelled
+  Refunded
+}
+
+model AcademicYear {
+  id       String    @id @default(uuid())
+  name     String    @unique // e.g. "2026/2027"
+  startsAt DateTime  @map("starts_at")
+  endsAt   DateTime  @map("ends_at")
+  status   String    @default("active")
+  bookings Booking[]
+
+  @@map("academic_years")
+}
+
+model Student {
+  id       String    @id @default(uuid())
+  regNo    String    @unique @map("reg_no")
+  name     String
+  gender   String
+  course   String
+  year     Int
+  phone    String?
+  email    String?
+  password String
+  status   String    @default("active")
+  bookings Booking[]
+
+  @@map("students")
+}
+
+model Hostel {
+  id            String  @id @default(uuid())
+  name          String
+  genderAllowed String  @map("gender_allowed")
+  location      String?
+  rooms         Room[]
+
+  @@map("hostels")
+}
+
+model Room {
+  id       String  @id @default(uuid())
+  hostelId String  @map("hostel_id")
+  hostel   Hostel  @relation(fields: [hostelId], references: [id])
+  number   String
+  floor    Int?
+  price    Decimal @db.Decimal(10, 2)
+  beds     Bed[]
+
+  @@map("rooms")
+}
+
+model Bed {
+  id       String    @id @default(uuid())
+  roomId   String    @map("room_id")
+  room     Room      @relation(fields: [roomId], references: [id])
+  number   String
+  status   String    @default("free")
+  bookings Booking[]
+
+  @@map("beds")
+}
+
+model Booking {
+  id             String        @id @default(uuid())
+  studentId      String        @map("student_id")
+  student        Student       @relation(fields: [studentId], references: [id])
+  bedId          String        @map("bed_id")
+  bed            Bed           @relation(fields: [bedId], references: [id])
+  academicYearId String        @map("academic_year_id")
+  academicYear   AcademicYear  @relation(fields: [academicYearId], references: [id])
+  status         BookingStatus @default(Pending)
+  expiresAt      DateTime      @map("expires_at")
+  checkedInAt    DateTime?     @map("checked_in_at")
+  qrCode         String?       @map("qr_code")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  payment        Payment?
+
+  @@map("bookings")
+}
+
+model Payment {
+  id             String            @id @default(uuid())
+  bookingId      String            @unique @map("booking_id")
+  booking        Booking           @relation(fields: [bookingId], references: [id])
+  controlNumber  String            @unique @map("control_number")
+  amount         Decimal           @db.Decimal(10, 2)
+  status         String            @default("pending")
+  paidAt         DateTime?         @map("paid_at")
+  channel        String?
+  refundedAt     DateTime?         @map("refunded_at")
+  refundedAmount Decimal?          @db.Decimal(10, 2) @map("refunded_amount")
+  callbacks      PaymentCallback[]
+
+  @@map("payments")
+}
+
+model PaymentCallback {
+  id         String   @id @default(uuid())
+  paymentId  String   @map("payment_id")
+  payment    Payment  @relation(fields: [paymentId], references: [id])
+  gatewayRef String   @unique @map("gateway_ref")
+  receivedAt DateTime @default(now()) @map("received_at")
+
+  @@map("payment_callbacks")
+}
+
+model User {
+  id       String   @id @default(uuid())
+  username String   @unique
+  password String
+  name     String
+  role     UserRole
+
+  @@map("users")
+}
