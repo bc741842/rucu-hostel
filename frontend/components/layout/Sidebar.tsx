@@ -10,9 +10,18 @@ import { navItems } from "../../lib/nav-config";
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
+  onNavigate?: () => void;
+  showToggle?: boolean;
+  className?: string;
 }
 
-export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
+export default function Sidebar({
+  collapsed,
+  onToggle,
+  onNavigate,
+  showToggle = true,
+  className = "",
+}: SidebarProps) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
@@ -29,19 +38,20 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
     <motion.aside
       animate={{ width: collapsed ? 72 : 224 }}
       transition={{ type: "spring", stiffness: 260, damping: 28 }}
-      className="flex h-full flex-col bg-navy-900 shrink-0 overflow-hidden"
+      className={`flex h-full flex-col bg-navy-900 shrink-0 overflow-hidden ${className}`}
     >
-      {/* Toggle */}
-      <button
-        onClick={onToggle}
-        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        className="flex items-center justify-center py-4 text-white/50 transition-colors hover:text-gold-300"
-      >
-        {collapsed ? <ChevronsRight size={18} /> : <ChevronsLeft size={18} />}
-      </button>
+      {showToggle && (
+        <button
+          onClick={onToggle}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="flex items-center justify-center py-4 text-white/50 transition-colors hover:text-gold-300"
+        >
+          {collapsed ? <ChevronsRight size={18} /> : <ChevronsLeft size={18} />}
+        </button>
+      )}
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto scrollbar-thin px-3 space-y-1.5">
+      <nav className={`flex-1 overflow-y-auto scrollbar-thin px-3 space-y-1.5 ${!showToggle ? "pt-4" : ""}`}>
         {visibleItems.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -51,6 +61,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onNavigate}
               title={collapsed ? item.label : undefined}
               className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
                 isActive
@@ -59,9 +70,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               } ${collapsed ? "justify-center" : ""}`}
             >
               <Icon size={19} strokeWidth={2} className="shrink-0" />
-              {!collapsed && (
-                <span className="truncate font-medium">{item.label}</span>
-              )}
+              {!collapsed && <span className="truncate font-medium">{item.label}</span>}
             </Link>
           );
         })}
@@ -73,16 +82,12 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           collapsed ? "flex-col" : ""
         }`}
       >
-        <div
-          className={`flex items-center gap-2.5 ${collapsed ? "" : "flex-1 min-w-0"}`}
-        >
+        <div className={`flex items-center gap-2.5 ${collapsed ? "" : "flex-1 min-w-0"}`}>
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-white">
             {displayName?.slice(0, 1).toUpperCase()}
           </span>
           {!collapsed && (
-            <span className="truncate text-sm text-white/80">
-              {displayName}
-            </span>
+            <span className="truncate text-sm text-white/80">{displayName}</span>
           )}
         </div>
         <button

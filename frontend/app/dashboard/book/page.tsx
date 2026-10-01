@@ -50,17 +50,24 @@ interface HostelGroup {
   rooms: Record<string, RoomGroup>;
 }
 
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.05 } },
+};
+const itemVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.25, ease: "easeOut" as const } },
+};
+
 export default function BookBedPage() {
   const [beds, setBeds] = useState<Bed[]>([]);
   const [academicYear, setAcademicYear] = useState<AcademicYear | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Drill-down navigation state
   const [selectedHostelId, setSelectedHostelId] = useState<string | null>(null);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
-  // Booking modal state
   const [selectedBed, setSelectedBed] = useState<Bed | null>(null);
   const [booking, setBooking] = useState(false);
   const [bookingResult, setBookingResult] = useState<any>(null);
@@ -92,7 +99,6 @@ export default function BookBedPage() {
     }
   }
 
-  // Jenga muundo wa Hostel -> Room -> Bed[]
   const hostelGroups = useMemo(() => {
     const groups: Record<string, HostelGroup> = {};
     for (const bed of beds) {
@@ -163,7 +169,6 @@ export default function BookBedPage() {
         for 24 hours while you complete payment.
       </p>
 
-      {/* Breadcrumb */}
       {!loading && !error && hostelList.length > 0 && (
         <div className="mt-5 flex items-center gap-1.5 text-sm">
           <button
@@ -218,7 +223,12 @@ export default function BookBedPage() {
 
       {/* LEVEL 1: Hostel cards */}
       {!loading && !currentHostel && hostelList.length > 0 && (
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
           {hostelList.map((hostel) => {
             const bedCount = Object.values(hostel.rooms).reduce(
               (sum, r) => sum + r.beds.length,
@@ -226,8 +236,10 @@ export default function BookBedPage() {
             );
             const roomCount = Object.keys(hostel.rooms).length;
             return (
-              <button
+              <motion.button
                 key={hostel.id}
+                variants={itemVariants}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => setSelectedHostelId(hostel.id)}
                 className="group flex flex-col items-start rounded-card border border-line bg-white p-5 text-left transition-all hover:-translate-y-0.5 hover:border-navy-500 hover:shadow-md"
               >
@@ -248,18 +260,25 @@ export default function BookBedPage() {
                     {bedCount} beds free
                   </span>
                 </div>
-              </button>
+              </motion.button>
             );
           })}
-        </div>
+        </motion.div>
       )}
 
-      {/* LEVEL 2: Room cards within selected hostel */}
+      {/* LEVEL 2: Room cards */}
       {!loading && currentHostel && !currentRoom && (
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {roomList.map((room) => (
-            <button
+            <motion.button
               key={room.id}
+              variants={itemVariants}
+              whileTap={{ scale: 0.97 }}
               onClick={() => setSelectedRoomId(room.id)}
               className="group flex flex-col items-start rounded-card border border-line bg-white p-5 text-left transition-all hover:-translate-y-0.5 hover:border-navy-500 hover:shadow-md"
             >
@@ -278,17 +297,24 @@ export default function BookBedPage() {
               <span className="mt-3 rounded-full bg-gold-500/15 px-2.5 py-1 text-xs font-medium text-gold-700">
                 {room.beds.length} beds free
               </span>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
       )}
 
-      {/* LEVEL 3: Bed cards within selected room */}
+      {/* LEVEL 3: Bed cards */}
       {!loading && currentRoom && (
-        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
+        >
           {currentRoom.beds.map((bed) => (
-            <button
+            <motion.button
               key={bed.id}
+              variants={itemVariants}
+              whileTap={{ scale: 0.97 }}
               onClick={() => setSelectedBed(bed)}
               className="group flex flex-col rounded-card border border-line bg-white p-4 text-left transition-all hover:-translate-y-0.5 hover:border-navy-500 hover:shadow-md"
             >
@@ -301,12 +327,12 @@ export default function BookBedPage() {
               <p className="mt-1 text-sm font-semibold text-navy-900">
                 TZS {Number(bed.room.price).toLocaleString()}
               </p>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
       )}
 
-      {/* Modal ya uthibitisho wa booking */}
+      {/* Booking modal */}
       <AnimatePresence>
         {selectedBed && (
           <motion.div
@@ -356,19 +382,26 @@ export default function BookBedPage() {
                     </p>
                   )}
 
-                  <button
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
                     onClick={confirmBooking}
                     disabled={booking}
                     className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-navy-700 disabled:opacity-60"
                   >
                     {booking && <Loader2 size={16} className="animate-spin" />}
                     Confirm Booking
-                  </button>
+                  </motion.button>
                 </>
               ) : (
                 <>
                   <div className="mt-4 flex flex-col items-center text-center">
-                    <CheckCircle2 size={40} className="text-success-600" />
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                    >
+                      <CheckCircle2 size={40} className="text-success-600" />
+                    </motion.div>
                     <p className="mt-3 text-sm text-ink-light">
                       Your bed is held. Use the control number below to make
                       payment.

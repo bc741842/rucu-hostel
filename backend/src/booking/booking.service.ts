@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  ForbiddenException,
   Logger,
 } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
@@ -146,6 +147,41 @@ export class BookingService {
     return this.prisma.booking.findUnique({
       where: { id: createdBookingId },
       include: BOOKING_INCLUDE,
+    });
+  }
+ 
+  async cancelBooking(studentId: string, bookingId: string) {
+    return this.prisma.$transaction(async (tx) => {
+      const booking = await tx.booking.findUnique({
+        where: { id: bookingId },
+      });
+ 
+      if (!booking) {
+        throw new NotFoundException('Booking not found');
+      }
+ 
+      if (booking.studentId !== studentId) {
+        throw new ForbiddenException('This booking does not belong to you');
+      }
+ 
+      if (booking.status !== 'Pending') {
+        throw new ConflictException(
+          'Only a pending (unpaid) booking can be cancelled. ' +
+            'Contact the accountant for a paid booking.',
+        );
+      }
+ 
+      const updated = await tx.booking.update({
+        where: { id: bookingId },
+        data: { status: 'Cancelled' },
+      });
+ 
+      await tx.bed.update({
+        where: { id: booking.bedId },
+        data: { status: 'free' },
+      });
+ 
+      return updated;
     });
   }
  

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BedDouble, Building2, Clock, Loader2, Wallet } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { BedDouble, Building2, Clock, Loader2, Wallet, X } from "lucide-react";
 import { api } from "../../../lib/api";
 
 interface BookingItem {
@@ -41,6 +42,10 @@ export default function MyBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [cancelTarget, setCancelTarget] = useState<BookingItem | null>(null);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState("");
+
   useEffect(() => {
     load();
   }, []);
@@ -58,6 +63,27 @@ export default function MyBookingsPage() {
       );
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function confirmCancel() {
+    if (!cancelTarget) return;
+    setCancelling(true);
+    setCancelError("");
+    try {
+      await api.patch(`/bookings/${cancelTarget.id}/cancel`);
+      setBookings((prev) =>
+        prev.map((b) =>
+          b.id === cancelTarget.id ? { ...b, status: "Cancelled" } : b,
+        ),
+      );
+      setCancelTarget(null);
+    } catch (err: any) {
+      setCancelError(
+        err?.response?.data?.message || "Failed to cancel booking.",
+      );
+    } finally {
+      setCancelling(false);
     }
   }
 
@@ -147,16 +173,89 @@ export default function MyBookingsPage() {
               )}
 
               {booking.status === "Pending" && (
-                <div className="mt-3 flex items-center gap-1.5 text-xs text-warning-600">
-                  <Clock size={13} />
-                  Hold expires:{" "}
-                  {new Date(booking.expiresAt).toLocaleString()}
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 text-xs text-warning-600">
+                    <Clock size={13} />
+                    Hold expires:{" "}
+                    {new Date(booking.expiresAt).toLocaleString()}
+                  </div>
+                  <button
+                    onClick={() => setCancelTarget(booking)}
+                    className="rounded-lg border border-danger-600/30 px-3 py-1.5 text-xs font-semibold text-danger-600 transition-colors hover:bg-danger-50"
+                  >
+                    Cancel Booking
+                  </button>
                 </div>
               )}
             </div>
           ))}
         </div>
       )}
+
+      {/* Cancel confirm modal */}
+      <AnimatePresence>
+        {cancelTarget && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-navy-900/40 px-4"
+            onClick={() => !cancelling && setCancelTarget(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ type: "spring", stiffness: 300, damping: 28 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-sm rounded-card border border-line bg-white p-6 shadow-xl"
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="font-display text-lg font-semibold text-ink">
+                  Cancel this booking?
+                </h3>
+                <button
+                  onClick={() => !cancelling && setCancelTarget(null)}
+                  className="text-ink-light hover:text-ink"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <p className="mt-3 text-sm text-ink-light">
+                {cancelTarget.bed.room.hostel.name} · Room{" "}
+                {cancelTarget.bed.room.number} · Bed {cancelTarget.bed.number}{" "}
+                will be released immediately and made available to other
+                students. This cannot be undone.
+              </p>
+
+              {cancelError && (
+                <p className="mt-3 rounded-lg bg-danger-50 px-3 py-2 text-sm text-danger-600">
+                  {cancelError}
+                </p>
+              )}
+
+              <div className="mt-5 flex gap-2">
+                <button
+                  onClick={() => setCancelTarget(null)}
+                  disabled={cancelling}
+                  className="flex-1 rounded-lg border border-line py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-cream"
+                >
+                  Keep Booking
+                </button>
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  onClick={confirmCancel}
+                  disabled={cancelling}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-danger-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger-600/90 disabled:opacity-60"
+                >
+                  {cancelling && <Loader2 size={16} className="animate-spin" />}
+                  Yes, Cancel
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

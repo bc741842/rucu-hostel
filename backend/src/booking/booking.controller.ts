@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -28,6 +30,11 @@ export class BookingController {
   @Post()
   createBooking(@Req() req: any, @Body() dto: CreateBookingDto) {
     return this.bookingService.createBooking(req.user.studentId, dto);
+  }
+ 
+  @Patch(':id/cancel')
+  cancelBooking(@Req() req: any, @Param('id') id: string) {
+    return this.bookingService.cancelBooking(req.user.studentId, id);
   }
 }
  

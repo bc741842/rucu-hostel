@@ -20,6 +20,15 @@ interface Hostel {
   rooms: { id: string }[];
 }
 
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.05 } },
+};
+const itemVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.25, ease: "easeOut" as const } },
+};
+
 export default function HostelsPage() {
   const [hostels, setHostels] = useState<Hostel[]>([]);
   const [loading, setLoading] = useState(true);
@@ -123,12 +132,13 @@ export default function HostelsPage() {
             Add, edit, or remove hostels available for booking.
           </p>
         </div>
-        <button
+        <motion.button
+          whileTap={{ scale: 0.96 }}
           onClick={openCreate}
           className="flex shrink-0 items-center gap-2 rounded-lg bg-navy-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-navy-700"
         >
           <Plus size={16} /> Add Hostel
-        </button>
+        </motion.button>
       </div>
 
       {loading && (
@@ -150,11 +160,17 @@ export default function HostelsPage() {
       )}
 
       {!loading && !error && hostels.length > 0 && (
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {hostels.map((hostel) => (
-            <div
+            <motion.div
               key={hostel.id}
-              className="rounded-card border border-line bg-white p-5"
+              variants={itemVariants}
+              className="rounded-card border border-line bg-white p-5 transition-shadow hover:shadow-md"
             >
               <div className="flex items-start justify-between">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-50 text-navy-700">
@@ -185,9 +201,9 @@ export default function HostelsPage() {
               <span className="mt-3 inline-block rounded-full bg-navy-50 px-2.5 py-1 text-xs font-medium text-navy-700">
                 {hostel.rooms.length} rooms
               </span>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
 
       {/* Create/Edit modal */}
@@ -266,14 +282,15 @@ export default function HostelsPage() {
                 </p>
               )}
 
-              <button
+              <motion.button
+                whileTap={{ scale: 0.97 }}
                 onClick={save}
                 disabled={saving || !form.name}
                 className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-navy-900 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-navy-700 disabled:opacity-60"
               >
                 {saving && <Loader2 size={16} className="animate-spin" />}
                 {editing ? "Save Changes" : "Create Hostel"}
-              </button>
+              </motion.button>
             </motion.div>
           </motion.div>
         )}
@@ -316,14 +333,15 @@ export default function HostelsPage() {
                 >
                   Cancel
                 </button>
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
                   onClick={confirmDelete}
                   disabled={deleting}
                   className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-danger-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-danger-600/90 disabled:opacity-60"
                 >
                   {deleting && <Loader2 size={16} className="animate-spin" />}
                   Delete
-                </button>
+                </motion.button>
               </div>
             </motion.div>
           </motion.div>
