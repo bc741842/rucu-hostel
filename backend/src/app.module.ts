@@ -11,6 +11,7 @@ import { HostelsModule } from './hostels/hostels.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { BedsModule } from './beds/beds.module';
 import { AcademicYearsModule } from './academic-years/academic-years.module';
+import { WaitingListModule } from './waiting-list/waiting-list.module';
  
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AcademicYearsModule } from './academic-years/academic-years.module';
     RoomsModule,
     BedsModule,
     AcademicYearsModule,
+    WaitingListModule,
   ],
   controllers: [AppController],
   providers: [AppService],

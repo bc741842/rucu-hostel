@@ -1,3 +1,6 @@
+import { 
+  Hourglass, ListOrdered, /* ...icons zako zilizopo tayari... */ 
+} from "lucide-react";
 import {
   LayoutDashboard,
   BedDouble,
@@ -28,6 +31,17 @@ export const navItems: NavItem[] = [
     icon: BedDouble,
     allow: ["student"],
   },
+  {
+  label: "Waiting List",
+  href: "/dashboard/waiting-list",
+  icon: Hourglass,
+},
+{
+  label: "Waiting Queue",
+  href: "/dashboard/waiting-queue",
+  icon: ListOrdered,
+  allow: ["super_admin", "warden"],
+},
   {
     label: "My Bookings",
     href: "/dashboard/bookings",

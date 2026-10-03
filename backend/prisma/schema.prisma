@@ -25,38 +25,41 @@ enum BookingStatus {
 }
 
 model AcademicYear {
-  id       String    @id @default(uuid())
-  name     String    @unique // e.g. "2026/2027"
-  startsAt DateTime  @map("starts_at")
-  endsAt   DateTime  @map("ends_at")
-  status   String    @default("active")
-  bookings Booking[]
+  id             String        @id @default(uuid())
+  name           String        @unique // e.g. "2026/2027"
+  startsAt       DateTime      @map("starts_at")
+  endsAt         DateTime      @map("ends_at")
+  status         String        @default("active")
+  bookings       Booking[]
+  waitingEntries WaitingList[]
 
   @@map("academic_years")
 }
 
 model Student {
-  id       String    @id @default(uuid())
-  regNo    String    @unique @map("reg_no")
-  name     String
-  gender   String
-  course   String
-  year     Int
-  phone    String?
-  email    String?
-  password String
-  status   String    @default("active")
-  bookings Booking[]
+  id             String        @id @default(uuid())
+  regNo          String        @unique @map("reg_no")
+  name           String
+  gender         String
+  course         String
+  year           Int
+  phone          String?
+  email          String?
+  password       String
+  status         String        @default("active")
+  bookings       Booking[]
+  waitingEntries WaitingList[]
 
   @@map("students")
 }
 
 model Hostel {
-  id            String  @id @default(uuid())
-  name          String
-  genderAllowed String  @map("gender_allowed")
-  location      String?
-  rooms         Room[]
+  id             String        @id @default(uuid())
+  name           String
+  genderAllowed  String        @map("gender_allowed")
+  location       String?
+  rooms          Room[]
+  waitingEntries WaitingList[]
 
   @@map("hostels")
 }
@@ -136,4 +139,19 @@ model User {
   role     UserRole
 
   @@map("users")
+}
+
+model WaitingList {
+  id             String       @id @default(uuid())
+  studentId      String       @map("student_id")
+  student        Student      @relation(fields: [studentId], references: [id])
+  hostelId       String       @map("hostel_id")
+  hostel         Hostel       @relation(fields: [hostelId], references: [id])
+  academicYearId String       @map("academic_year_id")
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  status         String       @default("waiting") // waiting | notified | booked | cancelled
+  joinedAt       DateTime     @default(now()) @map("joined_at")
+
+  @@unique([studentId, hostelId, academicYearId])
+  @@map("waiting_list")
 }

@@ -5,6 +5,8 @@ import { BedDouble, Building2, ClipboardList, DoorOpen, Wallet } from "lucide-re
 import { useAuth } from "../../lib/auth-context";
 import { api } from "../../lib/api";
 
+const ACTIVE_BOOKING_STATUSES = ["Pending", "Paid", "Confirmed", "CheckedIn"];
+
 export default function DashboardPage() {
   const { user } = useAuth();
 
@@ -41,7 +43,9 @@ export default function DashboardPage() {
         ]);
         setStudentStats({
           availableBeds: bedsRes.data.length,
-          myBookings: bookingsRes.data.length,
+          myBookings: bookingsRes.data.filter((b: any) =>
+            ACTIVE_BOOKING_STATUSES.includes(b.status),
+          ).length,
           pendingPayments: paymentsRes.data.filter(
             (p: any) => p.status === "pending",
           ).length,
@@ -87,7 +91,7 @@ export default function DashboardPage() {
           />
           <StatCard
             icon={ClipboardList}
-            label="My Bookings"
+            label="My Active Bookings"
             value={loading ? "—" : studentStats.myBookings}
           />
           <StatCard

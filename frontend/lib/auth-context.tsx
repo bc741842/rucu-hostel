@@ -34,8 +34,7 @@ export interface RegisterPayload {
 interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
-  loginStudent: (regNo: string, password: string) => Promise<void>;
-  loginAdmin: (username: string, password: string) => Promise<void>;
+  login: (identifier: string, password: string) => Promise<void>;
   registerStudent: (payload: RegisterPayload) => Promise<void>;
   logout: () => void;
 }
@@ -61,22 +60,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   }, []);
 
-  async function loginStudent(regNo: string, password: string) {
-    const res = await api.post("/auth/login", { regNo, password });
-    const authUser: AuthUser = { type: "student", regNo };
-    Cookies.set("rucu_token", res.data.accessToken, { expires: 7 });
-    Cookies.set("rucu_user", JSON.stringify(authUser), { expires: 7 });
-    setUser(authUser);
-    router.push("/dashboard");
-  }
+  // Login MOJA kwa wote - backend ndio huamua kama ni mwanafunzi au admin
+  async function login(identifier: string, password: string) {
+    const res = await api.post("/auth/login", { identifier, password });
 
-  async function loginAdmin(username: string, password: string) {
-    const res = await api.post("/admin/auth/login", { username, password });
-    const authUser: AuthUser = {
-      type: "admin",
-      name: res.data.name,
-      role: res.data.role,
-    };
+    const authUser: AuthUser =
+      res.data.type === "admin"
+        ? { type: "admin", name: res.data.name, role: res.data.role }
+        : { type: "student", regNo: identifier };
+
     Cookies.set("rucu_token", res.data.accessToken, { expires: 7 });
     Cookies.set("rucu_user", JSON.stringify(authUser), { expires: 7 });
     setUser(authUser);
@@ -101,14 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        loginStudent,
-        loginAdmin,
-        registerStudent,
-        logout,
-      }}
+      value={{ user, loading, login, registerStudent, logout }}
     >
       {children}
     </AuthContext.Provider>

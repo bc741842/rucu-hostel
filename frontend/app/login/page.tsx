@@ -5,11 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Lock, IdCard, Loader2 } from "lucide-react";
 import { useAuth } from "../../lib/auth-context";
 
-type Mode = "student" | "admin";
-
 export default function LoginPage() {
-  const { loginStudent, loginAdmin } = useAuth();
-  const [mode, setMode] = useState<Mode>("student");
+  const { login } = useAuth();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -20,15 +17,10 @@ export default function LoginPage() {
     setError("");
     setSubmitting(true);
     try {
-      if (mode === "student") {
-        await loginStudent(identifier, password);
-      } else {
-        await loginAdmin(identifier, password);
-      }
+      await login(identifier, password);
     } catch (err: any) {
       setError(
-        err?.response?.data?.message ||
-          "Invalid RegNo/username or password.",
+        err?.response?.data?.message || "Invalid Reg. No./username or password.",
       );
     } finally {
       setSubmitting(false);
@@ -53,7 +45,6 @@ export default function LoginPage() {
           </div>
         </div>
       </header>
-      {/* Gold line */}
       <div className="h-[3px] w-full bg-gold-500" />
 
       {/* Content */}
@@ -65,42 +56,14 @@ export default function LoginPage() {
           Log in to continue
         </h1>
         <p className="mt-3 max-w-sm text-center text-sm text-ink-light">
-          For students and staff.
+          Students, wardens, and staff all sign in here.
         </p>
 
         <div className="mt-10 w-full max-w-md rounded-card border border-line bg-white p-8 shadow-[0_1px_3px_rgba(20,40,75,0.08),0_8px_24px_rgba(20,40,75,0.06)]">
-          {/* Toggle mode */}
-          <div className="mb-6 flex rounded-full border border-line bg-cream p-1">
-            {(["student", "admin"] as Mode[]).map((m) => (
-              <button
-                key={m}
-                type="button"
-                onClick={() => {
-                  setMode(m);
-                  setError("");
-                }}
-                className={`relative flex-1 rounded-full py-2 text-sm font-medium transition-colors ${
-                  mode === m ? "text-white" : "text-ink-light"
-                }`}
-              >
-                {mode === m && (
-                  <motion.span
-                    layoutId="mode-pill"
-                    className="absolute inset-0 rounded-full bg-navy-900"
-                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                  />
-                )}
-                <span className="relative">
-                  {m === "student" ? "Student" : "Administrator"}
-                </span>
-              </button>
-            ))}
-          </div>
-
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                {mode === "student" ? "Registration Number (RegNo)" : "Username"}
+                Registration Number or Username
               </label>
               <div className="flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-2.5 transition-colors focus-within:border-navy-900">
                 <IdCard size={16} className="text-ink-light" />
@@ -108,16 +71,24 @@ export default function LoginPage() {
                   required
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  placeholder={mode === "student" ? "RUCU/2026/001" : "admin1"}
+                  placeholder="RUCU/2026/001 or admin1"
                   className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink-light/50"
                 />
               </div>
             </div>
 
             <div>
-              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                Password
-              </label>
+              <div className="mb-1.5 flex items-center justify-between">
+                <label className="text-[11px] font-semibold uppercase tracking-wide text-ink">
+                  Password
+                </label>
+                <a
+                  href="/forgot-password"
+                  className="text-xs font-medium text-navy-900 hover:underline"
+                >
+                  Forgot password?
+                </a>
+              </div>
               <div className="flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-2.5 transition-colors focus-within:border-navy-900">
                 <Lock size={16} className="text-ink-light" />
                 <input
@@ -129,11 +100,6 @@ export default function LoginPage() {
                   className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink-light/50"
                 />
               </div>
-              {mode === "student" && (
-                <p className="mt-1.5 text-xs text-ink-light">
-                  Use the password you set when registering.
-                </p>
-              )}
             </div>
 
             <AnimatePresence>
@@ -160,24 +126,15 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 border-t border-line pt-5 text-center text-sm">
-            {mode === "student" ? (
-              <p className="text-ink-light">
-                Don&apos;t have an account?{" "}
-                <a
-                  href="/register"
-                  className="font-medium text-navy-900 hover:underline"
-                >
-                  Sign up
-                </a>
-              </p>
-            ) : (
-              <p className="text-ink-light">
-                Trouble logging in?{" "}
-                <span className="font-medium text-navy-900">
-                  Contact the system administrator
-                </span>
-              </p>
-            )}
+            <p className="text-ink-light">
+              New student?{" "}
+              <a
+                href="/register"
+                className="font-medium text-navy-900 hover:underline"
+              >
+                Create an account
+              </a>
+            </p>
           </div>
         </div>
       </main>

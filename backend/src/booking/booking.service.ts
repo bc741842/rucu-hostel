@@ -154,6 +154,7 @@ export class BookingService {
     return this.prisma.$transaction(async (tx) => {
       const booking = await tx.booking.findUnique({
         where: { id: bookingId },
+        include: { payment: true },
       });
  
       if (!booking) {
@@ -181,6 +182,15 @@ export class BookingService {
         data: { status: 'free' },
       });
  
+      // Ghairi pia control number/payment inayohusiana, isibaki
+      // ikihesabiwa kama "pending" hewani.
+      if (booking.payment && booking.payment.status === 'pending') {
+        await tx.payment.update({
+          where: { id: booking.payment.id },
+          data: { status: 'cancelled' },
+        });
+      }
+ 
       return updated;
     });
   }
@@ -193,19 +203,26 @@ export class BookingService {
         status: 'Pending',
         expiresAt: { lt: now },
       },
+      include: { payment: true },
     });
  
     for (const booking of expired) {
-      await this.prisma.$transaction([
-        this.prisma.booking.update({
+      await this.prisma.$transaction(async (tx) => {
+        await tx.booking.update({
           where: { id: booking.id },
           data: { status: 'Expired' },
-        }),
-        this.prisma.bed.update({
+        });
+        await tx.bed.update({
           where: { id: booking.bedId },
           data: { status: 'free' },
-        }),
-      ]);
+        });
+        if (booking.payment && booking.payment.status === 'pending') {
+          await tx.payment.update({
+            where: { id: booking.payment.id },
+            data: { status: 'cancelled' },
+          });
+        }
+      });
       this.logger.log(`Booking ${booking.id} expired, bed freed.`);
     }
   }
