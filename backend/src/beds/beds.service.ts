@@ -1,19 +1,37 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
 import { CreateBedDto } from './dto/create-bed.dto';
 import { UpdateBedDto } from './dto/update-bed.dto';
  
 @Injectable()
 export class BedsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private auditLogService: AuditLogService,
+  ) {}
  
-  async create(dto: CreateBedDto) {
+  async create(dto: CreateBedDto, actorId?: string, ip?: string) {
     const room = await this.prisma.room.findUnique({
       where: { id: dto.roomId },
     });
     if (!room) throw new NotFoundException('Room not found');
  
-    return this.prisma.bed.create({ data: dto });
+    const bed = await this.prisma.bed.create({ data: dto });
+ 
+    if (actorId) {
+      await this.auditLogService.log({
+        actorId,
+        action: 'bed.create',
+        description: `Created bed "${bed.number}" in room "${room.number}"`,
+        entityType: 'Bed',
+        entityId: bed.id,
+        after: dto,
+        ip,
+      });
+    }
+ 
+    return bed;
   }
  
   findAll(roomId?: string) {
@@ -32,12 +50,34 @@ export class BedsService {
     return bed;
   }
  
-  async update(id: string, dto: UpdateBedDto) {
-    await this.findOne(id);
-    return this.prisma.bed.update({ where: { id }, data: dto });
+  async update(id: string, dto: UpdateBedDto, actorId?: string, ip?: string) {
+    const existing = await this.findOne(id);
+    const updated = await this.prisma.bed.update({ where: { id }, data: dto });
+ 
+    if (actorId) {
+      const before: Record<string, any> = {};
+      const after: Record<string, any> = {};
+      for (const key of Object.keys(dto)) {
+        before[key] = (existing as any)[key];
+        after[key] = (updated as any)[key];
+      }
+ 
+      await this.auditLogService.log({
+        actorId,
+        action: 'bed.update',
+        description: `Updated bed "${existing.number}" in room "${existing.room.number}"`,
+        entityType: 'Bed',
+        entityId: id,
+        before,
+        after,
+        ip,
+      });
+    }
+ 
+    return updated;
   }
  
-  async remove(id: string) {
+  async remove(id: string, actorId?: string, ip?: string) {
     const bed = await this.findOne(id);
     const activeBooking = bed.bookings.find((b) =>
       ['Pending', 'Paid', 'Confirmed', 'CheckedIn'].includes(b.status),
@@ -47,7 +87,21 @@ export class BedsService {
         'Huwezi kufuta kitanda chenye booking hai.',
       );
     }
-    return this.prisma.bed.delete({ where: { id } });
+    await this.prisma.bed.delete({ where: { id } });
+ 
+    if (actorId) {
+      await this.auditLogService.log({
+        actorId,
+        action: 'bed.delete',
+        description: `Deleted bed "${bed.number}" from room "${bed.room.number}"`,
+        entityType: 'Bed',
+        entityId: id,
+        before: { number: bed.number, roomId: bed.roomId },
+        ip,
+      });
+    }
+ 
+    return { success: true };
   }
 }
  

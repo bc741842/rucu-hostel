@@ -23,19 +23,19 @@ export class WaitingListController {
   // Mwanafunzi: jiunge na foleni ya kusubiri kitanda
   @Post()
   join(@Req() req: any, @Body() dto: CreateWaitingEntryDto) {
-    return this.waitingListService.join(req.user.id, dto);
+    return this.waitingListService.join(req.user.studentId, dto);
   }
  
   // Mwanafunzi: orodha ya foleni zangu
   @Get('my')
   getMy(@Req() req: any) {
-    return this.waitingListService.getMy(req.user.id);
+    return this.waitingListService.getMy(req.user.studentId);
   }
  
   // Mwanafunzi: jitoe kwenye foleni
   @Patch(':id/leave')
   leave(@Req() req: any, @Param('id') id: string) {
-    return this.waitingListService.leave(req.user.id, id);
+    return this.waitingListService.leave(req.user.studentId, id);
   }
  
   // Admin / Warden: orodha kamili ya foleni (FIFO), inaweza kuchujwa na ?hostelId=

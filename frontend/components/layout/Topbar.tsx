@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { navItems } from "../../lib/nav-config";
+import NotificationBell from "../NotificationBell";
 
 export default function Topbar({
   onMobileMenuToggle,
@@ -35,9 +36,12 @@ export default function Topbar({
           {currentPage}
         </h1>
       </div>
-      <p className="hidden text-sm text-white/50 sm:block">
-        RUCU Hostel Booking System
-      </p>
+      <div className="flex items-center gap-4">
+        <p className="hidden text-sm text-white/50 sm:block">
+          RUCU Hostel Booking System
+        </p>
+        <NotificationBell />
+      </div>
     </header>
   );
 }

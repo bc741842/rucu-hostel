@@ -33,7 +33,7 @@ export class PaymentController {
   @Roles('super_admin', 'accountant')
   @Patch(':id/confirm')
   confirmPayment(@Param('id') id: string, @Req() req: any) {
-    return this.paymentService.confirmPayment(id, req.user.userId);
+    return this.paymentService.confirmPayment(id, req.user.userId, req.ip);
   }
 }
  

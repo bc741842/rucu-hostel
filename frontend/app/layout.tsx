@@ -33,6 +33,7 @@ export default function RootLayout({
     <html lang="en" translate="no">
       <body
         className={`${fraunces.variable} ${inter.variable} font-sans antialiased`}
+        suppressHydrationWarning
       >
         <AuthProvider>{children}</AuthProvider>
       </body>

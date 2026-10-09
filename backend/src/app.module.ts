@@ -12,6 +12,13 @@ import { RoomsModule } from './rooms/rooms.module';
 import { BedsModule } from './beds/beds.module';
 import { AcademicYearsModule } from './academic-years/academic-years.module';
 import { WaitingListModule } from './waiting-list/waiting-list.module';
+import { AnnouncementsModule } from './announcements/announcements.module';
+import { ChatModule } from './chat/chat.module';
+import { MaintenanceModule } from './maintenance/maintenance.module';
+import { ReportsModule } from './reports/reports.module';
+import { RatingsModule } from './ratings/ratings.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { AuditLogModule } from './audit-log/audit-log.module';
  
 @Module({
   imports: [
@@ -26,6 +33,13 @@ import { WaitingListModule } from './waiting-list/waiting-list.module';
     BedsModule,
     AcademicYearsModule,
     WaitingListModule,
+    AnnouncementsModule,
+    ChatModule,
+    MaintenanceModule,
+    ReportsModule,
+    RatingsModule,
+    NotificationsModule,
+    AuditLogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

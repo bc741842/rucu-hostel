@@ -1,5 +1,16 @@
-import { 
-  Hourglass, ListOrdered, /* ...icons zako zilizopo tayari... */ 
+import {
+  Hourglass, ListOrdered,
+  Megaphone,
+  MessageCircle,
+  Eye,
+  QrCode,
+  ScanLine,
+  Users,
+  Wrench,
+  BarChart3,
+  Star,
+  ShieldAlert,
+  /* ...icons zako zilizopo tayari... */
 } from "lucide-react";
 import {
   LayoutDashboard,
@@ -42,12 +53,84 @@ export const navItems: NavItem[] = [
   icon: ListOrdered,
   allow: ["super_admin", "warden"],
 },
+   {
+     label: "Chat",
+     href: "/dashboard/chat",
+     icon: MessageCircle, // import kutoka lucide-react
+     allow: ["student"],
+   },
+   {
+     label: "Monitor Chat",
+     href: "/dashboard/chat-manage",
+     icon: Eye, // au icon yoyote unayopenda
+     allow: ["super_admin", "warden", "accountant"],
+   },
+      {
+     label: "My QR Code",
+     href: "/dashboard/qr-code",
+     icon: QrCode, // kutoka lucide-react
+     allow: ["student"],
+   },
+   {
+     label: "QR Check-in",
+     href: "/dashboard/checkin",
+     icon: ScanLine, // kutoka lucide-react
+     allow: ["super_admin", "warden"],
+   },
+      {
+     label: "My Roommates",
+     href: "/dashboard/roommates",
+     icon: Users, // kutoka lucide-react
+     allow: ["student"],
+   },
+      {
+     label: "Maintenance",
+     href: "/dashboard/maintenance",
+     icon: Wrench,
+     allow: ["student"],
+   },
+   {
+     label: "Manage Maintenance",
+     href: "/dashboard/maintenance-manage",
+     icon: Wrench,
+     allow: ["super_admin", "warden"],
+   },
+      {
+     label: "Reports",
+     href: "/dashboard/reports",
+     icon: BarChart3, // kutoka lucide-react
+     allow: ["super_admin", "warden", "accountant"],
+   },
+ 
   {
     label: "My Bookings",
     href: "/dashboard/bookings",
     icon: ClipboardList,
     allow: ["student"],
   },
+  {
+  label: "Announcements",
+  href: "/dashboard/announcements",
+  icon: Megaphone,
+},
+{
+  label: "Manage Announcements",
+  href: "/dashboard/announcements-manage",
+  icon: Megaphone,
+  allow: ["super_admin", "warden", "accountant"],
+},
+   {
+     label: "Rate My Hostel",
+     href: "/dashboard/ratings",
+     icon: Star,
+     allow: ["student"],
+   },
+   {
+     label: "Hostel Ratings",
+     href: "/dashboard/ratings-summary",
+     icon: Star,
+     allow: ["super_admin", "warden", "accountant"],
+   },
   {
     label: "My Payments",
     href: "/dashboard/payments",
@@ -77,6 +160,12 @@ export const navItems: NavItem[] = [
     href: "/dashboard/confirm-payments",
     icon: BadgeCheck,
     allow: ["super_admin", "accountant"],
+  },
+  {
+    label: "Audit Log",
+    href: "/dashboard/audit-log",
+    icon: ShieldAlert,
+    allow: ["super_admin"],
   },
 ];
  

@@ -6,7 +6,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
  
-  // Ruhusu frontend (Next.js, port tofauti) kuongea na backend hii
+  // Ruhusu frontend (Next.js, port tofauti) kuongea na backend hii.
+  // Ongeza hapa anwani ya frontend yako ya kwenye hosting (mfano
+  // "https://rucu-hostel.vercel.app") pindi utakapo-deploy.
   app.enableCors({
     origin: [
       'http://localhost:3001',
@@ -24,6 +26,14 @@ async function bootstrap() {
     }),
   );
  
-  await app.listen(3000);
+  // Picha/audio/video/faili za Chat na Announcements sasa zinahifadhiwa
+  // Cloudinary (huduma ya nje ya bure), si kwenye diski ya server tena -
+  // hivyo hazipotei kila backend inapo-restart kwenye hosting ya bure.
+ 
+  // Hosting nyingi za bure (mfano Render) zinatoa namba ya PORT kupitia
+  // mazingira (environment variable) - tunaitumia ikiwepo, vinginevyo
+  // tunatumia 3000 kama kwenye computer yako.
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
+ 

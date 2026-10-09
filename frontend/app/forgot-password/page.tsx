@@ -2,7 +2,15 @@
 
 import { useState, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, IdCard, KeyRound, Lock, Loader2 } from "lucide-react";
+import {
+  CheckCircle2,
+  IdCard,
+  KeyRound,
+  Lock,
+  Loader2,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import { api } from "../../lib/api";
 
 type Step = "request" | "verify" | "reset" | "done";
@@ -292,6 +300,9 @@ function Field({
   placeholder?: string;
   type?: string;
 }) {
+  const isPassword = type === "password";
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div>
       <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
@@ -301,12 +312,30 @@ function Field({
         <Icon size={16} className="text-ink-light" />
         <input
           required
-          type={type}
+          type={isPassword ? (showPassword ? "text" : "password") : type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink-light/50"
+          {...(isPassword
+            ? {
+                autoComplete: "new-password",
+                "data-gramm": "false",
+                "data-gramm_editor": "false",
+                "data-enable-grammarly": "false",
+              }
+            : {})}
         />
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            className="text-ink-light transition-colors hover:text-ink"
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        )}
       </div>
     </div>
   );

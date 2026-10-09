@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -34,22 +35,26 @@ export class RoomsController {
   @UseGuards(RolesGuard)
   @Roles('super_admin')
   @Post()
-  create(@Body() dto: CreateRoomDto) {
-    return this.roomsService.create(dto);
+  create(@Req() req: any, @Body() dto: CreateRoomDto) {
+    return this.roomsService.create(dto, req.user.userId, req.ip);
   }
  
   @UseGuards(RolesGuard)
   @Roles('super_admin')
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateRoomDto) {
-    return this.roomsService.update(id, dto);
+  update(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Body() dto: UpdateRoomDto,
+  ) {
+    return this.roomsService.update(id, dto, req.user.userId, req.ip);
   }
  
   @UseGuards(RolesGuard)
   @Roles('super_admin')
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.roomsService.remove(id);
+  remove(@Req() req: any, @Param('id') id: string) {
+    return this.roomsService.remove(id, req.user.userId, req.ip);
   }
 }
  

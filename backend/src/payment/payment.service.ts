@@ -4,6 +4,8 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { NotificationsService } from '../notifications/notifications.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
  
 const ADMIN_PAYMENT_INCLUDE = {
   booking: {
@@ -19,7 +21,11 @@ const ADMIN_PAYMENT_INCLUDE = {
  
 @Injectable()
 export class PaymentService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationsService: NotificationsService,
+    private auditLogService: AuditLogService,
+  ) {}
  
   async getMyPayments(studentId: string) {
     return this.prisma.payment.findMany({
@@ -44,11 +50,11 @@ export class PaymentService {
     });
   }
  
-  async confirmPayment(paymentId: string, adminUserId: string) {
-    return this.prisma.$transaction(async (tx) => {
+  async confirmPayment(paymentId: string, adminUserId: string, ip?: string) {
+    const updatedPayment = await this.prisma.$transaction(async (tx) => {
       const payment = await tx.payment.findUnique({
         where: { id: paymentId },
-        include: { booking: true },
+        include: { booking: { include: { student: true } } },
       });
  
       if (!payment) {
@@ -59,7 +65,9 @@ export class PaymentService {
         throw new ConflictException('Payment hii tayari imethibitishwa');
       }
  
-      const updatedPayment = await tx.payment.update({
+      const previousStatus = payment.status;
+ 
+      const updated = await tx.payment.update({
         where: { id: paymentId },
         data: {
           status: 'completed',
@@ -73,8 +81,36 @@ export class PaymentService {
         data: { status: 'Paid' },
       });
  
-      return updatedPayment;
+      return {
+        ...updated,
+        studentId: payment.booking.studentId,
+        studentName: payment.booking.student.name,
+        studentRegNo: payment.booking.student.regNo,
+        previousStatus,
+      };
     });
+ 
+    // Notify the student their payment has been confirmed.
+    await this.notificationsService.create(
+      updatedPayment.studentId,
+      'Payment confirmed',
+      `Your payment of ${updatedPayment.amount} has been confirmed. Your booking is now Paid.`,
+      '/dashboard/payments',
+    );
+ 
+    // Audit trail — who confirmed this payment, and the before/after state.
+    await this.auditLogService.log({
+      actorId: adminUserId,
+      action: 'payment.confirm',
+      description: `Confirmed payment of ${updatedPayment.amount} for ${updatedPayment.studentName} (${updatedPayment.studentRegNo})`,
+      entityType: 'Payment',
+      entityId: updatedPayment.id,
+      before: { status: updatedPayment.previousStatus },
+      after: { status: 'completed', paidAt: updatedPayment.paidAt },
+      ip,
+    });
+ 
+    return updatedPayment;
   }
 }
  

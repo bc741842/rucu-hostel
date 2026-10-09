@@ -8,6 +8,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
+import { NotificationsService } from '../notifications/notifications.service';
+import { EmailService } from '../email/email.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
@@ -19,6 +21,8 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private notificationsService: NotificationsService,
+    private emailService: EmailService,
   ) {}
  
   async register(dto: RegisterDto) {
@@ -44,6 +48,15 @@ export class AuthService {
         password: hashedPassword,
       },
     });
+ 
+    // Welcome notification — in-app (visible as soon as they log in, which
+    // happens immediately below) and by email, if they gave one.
+    await this.notificationsService.create(
+      student.id,
+      'Welcome to RUCU Hostel Booking',
+      `Hi ${student.name}, your account (Reg No: ${student.regNo}) has been created successfully. You can now browse hostels and book a bed.`,
+      '/dashboard',
+    );
  
     return {
       ...this.buildStudentToken(student.id, student.regNo),
@@ -125,17 +138,32 @@ export class AuthService {
       { expiresIn: '10m' },
     );
  
-    // TODO: Hapa ndipo pa kuunganisha huduma HALISI ya SMS/Email.
-    console.log(
-      `[OTP - MAJARIBIO] Reg No: ${student.regNo} | Contact: ${contact} | OTP: ${otp}`,
-    );
+    // Send the OTP by email when the student has one on file. SMS is not
+    // wired up yet, so a phone-only account still falls back to the
+    // console log below (dev/testing only).
+    if (student.email) {
+      await this.emailService.sendMail(
+        student.email,
+        'Your RUCU Hostel password reset code',
+        `Hi ${student.name},\n\nYour one-time password (OTP) reset code is: ${otp}\n\nThis code expires in 10 minutes. If you did not request this, ignore this email.`,
+      );
+    } else {
+      // TODO: Hapa ndipo pa kuunganisha huduma ya SMS kwa wanafunzi
+      // wasio na email.
+      console.log(
+        `[OTP - MAJARIBIO] Reg No: ${student.regNo} | Contact: ${contact} | OTP: ${otp}`,
+      );
+    }
  
     const maskedContact = this.maskContact(contact);
  
     return {
       otpSession,
       maskedContact,
-      devOtp: otp, // ONDOA mara huduma halisi ikiwa tayari
+      // devOtp is only ever useful while there is no real email/SMS wired
+      // up for a given student (phone-only accounts, for now). Remove this
+      // entirely once SMS is added.
+      ...(student.email ? {} : { devOtp: otp }),
     };
   }
  

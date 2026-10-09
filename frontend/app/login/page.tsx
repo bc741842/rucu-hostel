@@ -2,13 +2,14 @@
 
 import { useState, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, IdCard, Loader2 } from "lucide-react";
+import { Lock, IdCard, Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../lib/auth-context";
 
 export default function LoginPage() {
   const { login } = useAuth();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -73,32 +74,47 @@ export default function LoginPage() {
                   onChange={(e) => setIdentifier(e.target.value)}
                   placeholder="RUCU/2026/001 or admin1"
                   className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink-light/50"
+                  data-gramm="false"
+                  data-gramm_editor="false"
+                  data-enable-grammarly="false"
                 />
               </div>
             </div>
 
             <div>
-              <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-[11px] font-semibold uppercase tracking-wide text-ink">
-                  Password
-                </label>
+              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
+                Password
+              </label>
+              <div className="flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-2.5 transition-colors focus-within:border-navy-900">
+                <Lock size={16} className="text-ink-light" />
+                <input
+                  required
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink-light/50"
+                  autoComplete="current-password"
+                  data-gramm="false"
+                  data-gramm_editor="false"
+                  data-enable-grammarly="false"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="text-ink-light transition-colors hover:text-ink"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              <div className="mt-1.5 flex justify-end">
                 <a
                   href="/forgot-password"
                   className="text-xs font-medium text-navy-900 hover:underline"
                 >
                   Forgot password?
                 </a>
-              </div>
-              <div className="flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-2.5 transition-colors focus-within:border-navy-900">
-                <Lock size={16} className="text-ink-light" />
-                <input
-                  required
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink-light/50"
-                />
               </div>
             </div>
 
