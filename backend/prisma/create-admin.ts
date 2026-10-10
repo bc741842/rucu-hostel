@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, UserRole } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 
@@ -17,7 +17,8 @@ const prisma = new PrismaClient({ adapter });
 // super_admin | accountant | warden).
 const USERNAME = process.env.ADMIN_USERNAME;
 const PASSWORD = process.env.ADMIN_PASSWORD;
-const ROLE = process.env.ADMIN_ROLE || 'super_admin';
+const VALID_ROLES = Object.values(UserRole);
+const RAW_ROLE = process.env.ADMIN_ROLE || 'super_admin';
 
 async function main() {
   if (!USERNAME || !PASSWORD) {
@@ -28,6 +29,14 @@ async function main() {
     );
     process.exit(1);
   }
+
+  if (!VALID_ROLES.includes(RAW_ROLE as UserRole)) {
+    console.error(
+      `Invalid ADMIN_ROLE "${RAW_ROLE}". Valid choices: ${VALID_ROLES.join(', ')}`,
+    );
+    process.exit(1);
+  }
+  const ROLE = RAW_ROLE as UserRole;
 
   if (PASSWORD.length < 8) {
     console.error('ADMIN_PASSWORD must be at least 8 characters long.');
