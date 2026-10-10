@@ -17,16 +17,18 @@ import { Response } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { StudentGuard } from '../common/guards/student.guard';
 import { AnnouncementsService } from './announcements.service';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto';
 import { announcementMulterOptions } from './multer.config';
- 
+
 @UseGuards(JwtAuthGuard)
 @Controller('announcements')
 export class AnnouncementsController {
   constructor(private readonly announcementsService: AnnouncementsService) {}
- 
+
   // Student: announcements relevant to me (general + my hostel's)
+  @UseGuards(StudentGuard)
   @Get('my')
   getMy(@Req() req: any) {
     return this.announcementsService.findForStudent(req.user.studentId);

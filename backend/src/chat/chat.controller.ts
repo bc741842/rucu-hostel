@@ -17,22 +17,25 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { StudentGuard } from '../common/guards/student.guard';
 import { ChatService } from './chat.service';
 import { SendMessageDto } from './dto/send-message.dto';
 import { chatMulterOptions } from './multer.config';
- 
+
 @UseGuards(JwtAuthGuard)
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
- 
+
   // Student: my own hostel's group chat
+  @UseGuards(StudentGuard)
   @Get('hostel')
   getMyHostelChat(@Req() req: any) {
     return this.chatService.getHostelMessages(req.user.studentId);
   }
- 
+
   // Field name "file" in the multipart form - optional (image/audio/video).
+  @UseGuards(StudentGuard)
   @Post('hostel')
   @UseInterceptors(FileInterceptor('file', chatMulterOptions))
   sendToMyHostel(
@@ -42,13 +45,14 @@ export class ChatController {
   ) {
     return this.chatService.sendHostelMessage(req.user.studentId, dto, file);
   }
- 
+
   // Everyone: the global "All Hostels" group chat
   @Get('all')
   getAllHostelsChat() {
     return this.chatService.getAllHostelsMessages();
   }
- 
+
+  @UseGuards(StudentGuard)
   @Post('all')
   @UseInterceptors(FileInterceptor('file', chatMulterOptions))
   sendToAllHostels(

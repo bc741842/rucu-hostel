@@ -10,13 +10,15 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { StudentGuard } from '../common/guards/student.guard';
 import { PaymentService } from './payment.service';
- 
+
 @UseGuards(JwtAuthGuard)
 @Controller('payments')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
- 
+
+  @UseGuards(StudentGuard)
   @Get('my')
   getMyPayments(@Req() req: any) {
     return this.paymentService.getMyPayments(req.user.studentId);

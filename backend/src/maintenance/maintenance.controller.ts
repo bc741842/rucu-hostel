@@ -13,22 +13,25 @@ import { MaintenanceStatus } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { StudentGuard } from '../common/guards/student.guard';
 import { MaintenanceService } from './maintenance.service';
 import { CreateMaintenanceRequestDto } from './dto/create-maintenance-request.dto';
 import { UpdateMaintenanceStatusDto } from './dto/update-maintenance-status.dto';
- 
+
 @UseGuards(JwtAuthGuard)
 @Controller('maintenance')
 export class MaintenanceController {
   constructor(private readonly maintenanceService: MaintenanceService) {}
- 
+
   // Student: report a new issue
+  @UseGuards(StudentGuard)
   @Post()
   createRequest(@Req() req: any, @Body() dto: CreateMaintenanceRequestDto) {
     return this.maintenanceService.createRequest(req.user.studentId, dto);
   }
- 
+
   // Student: see my own reports
+  @UseGuards(StudentGuard)
   @Get('my')
   getMyRequests(@Req() req: any) {
     return this.maintenanceService.getMyRequests(req.user.studentId);

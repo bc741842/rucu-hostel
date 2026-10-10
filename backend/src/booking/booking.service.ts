@@ -147,6 +147,10 @@ export class BookingService {
         );
       }
  
+      // Cheap early-exit check only - this does NOT prevent the race
+      // condition by itself, since two requests can both read "free"
+      // before either one writes. The real guard is the atomic
+      // updateMany() claim further below.
       if (bed.status !== 'free') {
         throw new ConflictException('Bed is not available');
       }
@@ -170,6 +174,23 @@ export class BookingService {
       if (existingBedBooking) {
         throw new ConflictException('Bed already has an active booking');
       }
+
+      // Atomic claim: only succeeds if the bed is STILL "free" at the
+      // moment Postgres executes this UPDATE. Under concurrent requests,
+      // Postgres serializes row-level updates to the same row, so only
+      // one of two simultaneous transactions can match status: 'free'
+      // here - the other gets count: 0 and is rejected. This is what
+      // actually prevents double-booking, not the read-only check above.
+      const claim = await tx.bed.updateMany({
+        where: { id: dto.bedId, status: 'free' },
+        data: { status: 'held' },
+      });
+
+      if (claim.count === 0) {
+        throw new ConflictException(
+          'This bed was just booked by someone else. Please choose another bed.',
+        );
+      }
  
       const expiresAt = new Date();
       expiresAt.setHours(expiresAt.getHours() + HOLD_DURATION_HOURS);
@@ -183,12 +204,7 @@ export class BookingService {
           expiresAt,
         },
       });
- 
-      await tx.bed.update({
-        where: { id: dto.bedId },
-        data: { status: 'held' },
-      });
- 
+
       const paymentsCount = await tx.payment.count();
       const yearTag = academicYear.name.replace('/', '');
       const sequence = String(paymentsCount + 1).padStart(6, '0');
