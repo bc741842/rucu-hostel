@@ -7,13 +7,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
  
   // Ruhusu frontend (Next.js, port tofauti) kuongea na backend hii.
-  // Ongeza hapa anwani ya frontend yako ya kwenye hosting (mfano
-  // "https://rucu-hostel.vercel.app") pindi utakapo-deploy.
+  // Anwani ya frontend yako ya kwenye hosting (Netlify).
   app.enableCors({
     origin: [
       'http://localhost:3001',
       'http://127.0.0.1:3001',
       'http://localhost:3000',
+      'https://boisterous-stroopwafel-bccf8e.netlify.app',
     ],
     credentials: true,
   });
