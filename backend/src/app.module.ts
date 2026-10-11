@@ -19,11 +19,13 @@ import { ReportsModule } from './reports/reports.module';
 import { RatingsModule } from './ratings/ratings.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
- 
+import { SetupModule } from './setup/setup.module';
+
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     PrismaModule,
+    SetupModule,
     AuthModule,
     BookingModule,
     PaymentModule,
