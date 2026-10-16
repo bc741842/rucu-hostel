@@ -181,6 +181,7 @@ export default function RegisterPage() {
               placeholder="••••••••"
               type="password"
               required
+              minLength={8}
             />
 
             <AnimatePresence>
@@ -231,6 +232,7 @@ function Field({
   placeholder,
   type = "text",
   required = false,
+  minLength,
 }: {
   label: string;
   icon: any;
@@ -239,6 +241,7 @@ function Field({
   placeholder?: string;
   type?: string;
   required?: boolean;
+  minLength?: number;
 }) {
   const isPassword = type === "password";
   const [showPassword, setShowPassword] = useState(false);
@@ -252,6 +255,7 @@ function Field({
         <Icon size={16} className="text-ink-light" />
         <input
           required={required}
+          minLength={minLength}
           type={isPassword ? (showPassword ? "text" : "password") : type}
           value={value}
           onChange={(e) => onChange(e.target.value)}

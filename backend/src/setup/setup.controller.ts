@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Controller, Get, Query } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserRole } from '@prisma/client';
@@ -13,9 +13,7 @@ import { UserRole } from '@prisma/client';
  * ADMIN_PASSWORD / ADMIN_ROLE env vars, exactly like create-admin.ts does,
  * so nothing sensitive is ever passed in the URL itself.
  *
- * Safe to leave deployed: without the correct `key` query param it does
- * nothing, and it's an upsert, so re-visiting it just resets the admin's
- * password to whatever ADMIN_PASSWORD currently is.
+ * Disabled automatically as soon as any staff account exists.
  */
 @Controller('setup')
 export class SetupController {
@@ -25,6 +23,14 @@ export class SetupController {
   async createAdmin(@Query('key') key: string) {
     if (!process.env.SETUP_SECRET || key !== process.env.SETUP_SECRET) {
       throw new BadRequestException('Invalid or missing key.');
+    }
+
+    // One-time only: once any staff account exists this endpoint is closed,
+    // so it can never be used to reset an admin password afterwards.
+    if ((await this.prisma.user.count()) > 0) {
+      throw new ForbiddenException(
+        'Setup already completed. This endpoint is disabled.',
+      );
     }
 
     const username = process.env.ADMIN_USERNAME;

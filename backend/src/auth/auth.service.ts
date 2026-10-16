@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { randomInt } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { EmailService } from '../email/email.service';
@@ -118,55 +119,34 @@ export class AuthService {
     const student = await this.prisma.student.findUnique({
       where: { regNo: dto.regNo },
     });
- 
-    if (!student) {
-      throw new NotFoundException('Student not found');
-    }
- 
-    const contact = student.phone || student.email;
-    if (!contact) {
-      throw new BadRequestException(
-        'No phone number or email is on file for this account. Contact the administrator.',
-      );
-    }
- 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Same response whether or not the account exists / has an email, so the
+    // endpoint can't be used to discover valid registration numbers. The OTP
+    // is only ever delivered by email, never returned in the response.
+    const otp = randomInt(100000, 1000000).toString();
     const otpHash = await bcrypt.hash(otp, 10);
- 
+
     const otpSession = this.jwtService.sign(
-      { sub: student.id, otpHash, purpose: 'otp_verify' },
+      { sub: student?.id ?? 'none', otpHash, purpose: 'otp_verify' },
       { expiresIn: '10m' },
     );
- 
-    // Send the OTP by email when the student has one on file. SMS is not
-    // wired up yet, so a phone-only account still falls back to the
-    // console log below (dev/testing only).
-    if (student.email) {
+
+    if (student?.email) {
       await this.emailService.sendMail(
         student.email,
         'Your RUCU Hostel password reset code',
         `Hi ${student.name},\n\nYour one-time password (OTP) reset code is: ${otp}\n\nThis code expires in 10 minutes. If you did not request this, ignore this email.`,
       );
-    } else {
-      // TODO: Hapa ndipo pa kuunganisha huduma ya SMS kwa wanafunzi
-      // wasio na email.
-      console.log(
-        `[OTP - MAJARIBIO] Reg No: ${student.regNo} | Contact: ${contact} | OTP: ${otp}`,
-      );
     }
- 
-    const maskedContact = this.maskContact(contact);
- 
+
     return {
       otpSession,
-      maskedContact,
-      // devOtp is only ever useful while there is no real email/SMS wired
-      // up for a given student (phone-only accounts, for now). Remove this
-      // entirely once SMS is added.
-      ...(student.email ? {} : { devOtp: otp }),
+      maskedContact: student?.email
+        ? this.maskContact(student.email)
+        : 'your registered email',
     };
   }
- 
+
   async verifyOtp(dto: VerifyOtpDto) {
     let payload: any;
     try {
@@ -181,6 +161,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid OTP session');
     }
  
+    if (payload.sub === 'none') {
+      throw new UnauthorizedException('Incorrect OTP. Please try again.');
+    }
+
     const otpMatches = await bcrypt.compare(dto.otp, payload.otpHash);
     if (!otpMatches) {
       throw new UnauthorizedException('Incorrect OTP. Please try again.');

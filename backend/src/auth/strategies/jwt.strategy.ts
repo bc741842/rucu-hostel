@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
  
@@ -13,6 +13,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
  
   validate(payload: any) {
+    // Short-lived OTP / reset tokens must never work as login tokens.
+    if (payload.purpose) {
+      throw new UnauthorizedException();
+    }
     // Token za wafanyakazi (admin/accountant/warden) zina 'role' ndani ya payload.
     // Token za wanafunzi zina 'regNo' badala yake.
     if (payload.role) {

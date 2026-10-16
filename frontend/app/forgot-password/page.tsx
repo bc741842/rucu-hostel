@@ -20,7 +20,6 @@ export default function ForgotPasswordPage() {
   const [regNo, setRegNo] = useState("");
   const [otpSession, setOtpSession] = useState("");
   const [maskedContact, setMaskedContact] = useState("");
-  const [devOtp, setDevOtp] = useState("");
   const [otp, setOtp] = useState("");
   const [resetToken, setResetToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -36,7 +35,6 @@ export default function ForgotPasswordPage() {
       const res = await api.post("/auth/forgot-password", { regNo });
       setOtpSession(res.data.otpSession);
       setMaskedContact(res.data.maskedContact);
-      setDevOtp(res.data.devOtp ?? "");
       setStep("verify");
     } catch (err: any) {
       setError(
@@ -164,13 +162,6 @@ export default function ForgotPasswordPage() {
                 onSubmit={handleVerifyOtp}
                 className="space-y-5"
               >
-                {devOtp && (
-                  <div className="rounded-lg border border-gold-500/40 bg-gold-500/10 px-3 py-2 text-xs text-navy-900">
-                    <strong>Testing mode</strong> (no SMS/Email service
-                    connected yet): your OTP is{" "}
-                    <span className="font-mono font-bold">{devOtp}</span>
-                  </div>
-                )}
                 <Field
                   label="6-digit OTP"
                   icon={KeyRound}

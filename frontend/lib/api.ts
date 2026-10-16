@@ -16,10 +16,13 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      Cookies.remove("rucu_token");
-      Cookies.remove("rucu_user_type");
-      if (typeof window !== "undefined") {
+    if (error.response?.status === 401 && typeof window !== "undefined") {
+      // Don't hijack auth pages: a wrong password also returns 401 and the
+      // page must be able to show its own error message.
+      const publicPaths = ["/login", "/register", "/forgot-password"];
+      if (!publicPaths.includes(window.location.pathname)) {
+        Cookies.remove("rucu_token");
+        Cookies.remove("rucu_user_type");
         window.location.href = "/login";
       }
     }
