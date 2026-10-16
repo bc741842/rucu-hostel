@@ -12,6 +12,7 @@ import {
   Download,
 } from "lucide-react";
 import { api } from "../../../lib/api";
+import { useToast } from "../../../components/ui/Toast";
 
 interface Announcement {
   id: string;
@@ -41,6 +42,7 @@ function formatSize(bytes: number): string {
 }
 
 export default function AnnouncementsPage() {
+  const toast = useToast();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -82,7 +84,7 @@ export default function AnnouncementsPage() {
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch {
-      alert("Could not download this document. Please try again.");
+      toast.error("Could not download this document. Please try again.");
     } finally {
       setDownloadingId(null);
     }

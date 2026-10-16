@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { navItems } from "../../lib/nav-config";
 import NotificationBell from "../NotificationBell";
+import { useAuth } from "../../lib/auth-context";
 
 export default function Topbar({
   onMobileMenuToggle,
@@ -11,6 +12,11 @@ export default function Topbar({
   onMobileMenuToggle: () => void;
 }) {
   const pathname = usePathname();
+  const { user } = useAuth();
+  const who =
+    user?.type === "admin"
+      ? `${user.name ?? "Admin"} · ${user.role?.replace("_", " ")}`
+      : user?.regNo ?? "";
 
   const currentPage =
     navItems.find(
@@ -37,8 +43,8 @@ export default function Topbar({
         </h1>
       </div>
       <div className="flex items-center gap-4">
-        <p className="hidden text-sm text-white/50 sm:block">
-          RUCU Hostel Booking System
+        <p className="hidden max-w-[16rem] truncate text-sm capitalize text-white/60 sm:block">
+          {who}
         </p>
         <NotificationBell />
       </div>

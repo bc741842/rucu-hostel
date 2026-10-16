@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { api } from "../../../lib/api";
+import { useToast } from "../../../components/ui/Toast";
 
 interface Hostel {
   id: string;
@@ -49,6 +50,7 @@ function formatSize(bytes: number): string {
 }
 
 export default function ManageAnnouncementsPage() {
+  const toast = useToast();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [hostels, setHostels] = useState<Hostel[]>([]);
 
@@ -165,7 +167,7 @@ export default function ManageAnnouncementsPage() {
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch {
-      alert("Could not download this document. Please try again.");
+      toast.error("Could not download this document. Please try again.");
     } finally {
       setDownloadingId(null);
     }

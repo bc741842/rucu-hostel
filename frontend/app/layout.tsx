@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "../lib/auth-context";
+import { ToastProvider } from "../components/ui/Toast";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -17,11 +18,18 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "RUCU Hostel | Ruaha Catholic University",
+  title: {
+    default: "RUCU Hostel | Ruaha Catholic University",
+    template: "%s | RUCU Hostel",
+  },
   description: "Book and pay for your hostel bed - RUCU",
   other: {
     google: "notranslate",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#14284b",
 };
 
 export default function RootLayout({
@@ -35,7 +43,9 @@ export default function RootLayout({
         className={`${fraunces.variable} ${inter.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </AuthProvider>
       </body>
     </html>
   );

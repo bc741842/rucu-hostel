@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BedDouble, Building2, Clock, Loader2, Wallet, X } from "lucide-react";
 import { api } from "../../../lib/api";
+import PageHeader from "../../../components/ui/PageHeader";
+import EmptyState from "../../../components/ui/EmptyState";
+import { CardSkeleton } from "../../../components/ui/Skeleton";
+import Button from "../../../components/ui/Button";
 
 interface BookingItem {
   id: string;
@@ -89,36 +93,43 @@ export default function MyBookingsPage() {
 
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Booking History
-      </p>
-      <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        My Bookings
-      </h2>
-      <p className="mt-2 max-w-lg text-sm text-ink-light">
-        All the bed bookings you have made, past and present.
-      </p>
+      <PageHeader
+        eyebrow="Booking History"
+        title="My Bookings"
+        description="All the bed bookings you have made, past and present."
+      />
 
       {loading && (
-        <div className="mt-10 flex items-center justify-center gap-2 text-sm text-ink-light">
-          <Loader2 size={16} className="animate-spin" /> Loading your
-          bookings...
+        <div className="mt-6 space-y-3">
+          <CardSkeleton />
+          <CardSkeleton />
         </div>
       )}
 
       {!loading && error && (
-        <div className="mt-8 rounded-card border border-danger-600/20 bg-danger-50 p-6 text-sm text-danger-600">
-          {error}
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-card border border-danger-600/20 bg-danger-50 p-6 text-sm text-danger-600">
+          <span>{error}</span>
+          <Button variant="secondary" onClick={load}>
+            Try again
+          </Button>
         </div>
       )}
 
       {!loading && !error && bookings.length === 0 && (
-        <div className="mt-8 rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
-          You haven&apos;t booked a bed yet.{" "}
-          <a href="/dashboard/book" className="font-medium text-navy-900 hover:underline">
-            Book one now
-          </a>
-          .
+        <div className="mt-8">
+          <EmptyState
+            icon={<BedDouble size={22} />}
+            title="No bookings yet"
+            description="When you book a bed it will appear here with its payment status."
+            action={
+              <a
+                href="/dashboard/book"
+                className="inline-flex rounded-lg bg-navy-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-navy-700"
+              >
+                Book a bed
+              </a>
+            }
+          />
         </div>
       )}
 

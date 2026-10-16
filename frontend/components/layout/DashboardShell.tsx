@@ -3,12 +3,14 @@
 import { useState, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 
 export default function DashboardShell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-cream">
@@ -60,7 +62,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
         </AnimatePresence>
 
         <motion.main
-          key={typeof window !== "undefined" ? window.location.pathname : "main"}
+          key={pathname}
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
