@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../lib/auth-context";
 import { api } from "../../lib/api";
+import { useLang } from "../../lib/i18n";
 import PageHeader from "../../components/ui/PageHeader";
 import StatCard from "../../components/ui/StatCard";
 import Badge from "../../components/ui/Badge";
@@ -31,6 +32,7 @@ interface MyBooking {
 }
 
 export default function DashboardPage() {
+  const { t, lang } = useLang();
   const { user } = useAuth();
 
   const roleLabel =
@@ -99,8 +101,12 @@ export default function DashboardPage() {
     <div>
       <PageHeader
         eyebrow={roleLabel}
-        title="Account Overview"
-        description={`Welcome, ${displayName}. Here is your current hostel booking and payment status.`}
+        title={t("Account Overview")}
+        description={
+          lang === "sw"
+            ? `Karibu, ${displayName}. Hii ni hali ya sasa ya uhifadhi na malipo yako.`
+            : `Welcome, ${displayName}. Here is your current hostel booking and payment status.`
+        }
       />
 
       {user?.type === "student" ? (
@@ -109,22 +115,22 @@ export default function DashboardPage() {
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
             <StatCard
               icon={BedDouble}
-              label="Available Beds"
+              label={t("Available Beds")}
               value={studentStats.availableBeds}
               loading={loading}
               href="/dashboard/book"
-              hint="Tap to browse and book"
+              hint={t("Tap to browse and book")}
             />
             <StatCard
               icon={ClipboardList}
-              label="My Active Bookings"
+              label={t("My Active Bookings")}
               value={studentStats.myBookings}
               loading={loading}
               href="/dashboard/bookings"
             />
             <StatCard
               icon={Wallet}
-              label="Pending Payments"
+              label={t("Pending Payments")}
               value={studentStats.pendingPayments}
               loading={loading}
               href="/dashboard/payments"
@@ -135,21 +141,21 @@ export default function DashboardPage() {
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <StatCard
             icon={Building2}
-            label="Hostels"
+            label={t("Hostels")}
             value={adminStats.hostels}
             loading={loading}
             href="/dashboard/hostels"
           />
           <StatCard
             icon={DoorOpen}
-            label="Rooms"
+            label={t("Rooms")}
             value={adminStats.rooms}
             loading={loading}
             href="/dashboard/rooms"
           />
           <StatCard
             icon={BedDouble}
-            label="Available Beds"
+            label={t("Available Beds")}
             value={adminStats.availableBeds}
             loading={loading}
             href="/dashboard/beds"
@@ -168,6 +174,7 @@ function NextStep({
   loading: boolean;
   booking: MyBooking | null;
 }) {
+  const { t, lang } = useLang();
   if (loading) return <Skeleton className="mt-8 h-28 w-full" />;
 
   if (!booking) {
@@ -175,10 +182,10 @@ function NextStep({
       <Banner
         tone="info"
         icon={<BedDouble size={20} />}
-        title="You have no bed yet"
-        text="Pick a hostel, room and bed to start your booking."
+        title={t("You have no bed yet")}
+        text={t("Pick a hostel, room and bed to start your booking.")}
         href="/dashboard/book"
-        cta="Book a bed"
+        cta={t("Book a bed")}
       />
     );
   }
@@ -194,14 +201,22 @@ function NextStep({
       <Banner
         tone="warning"
         icon={<AlertTriangle size={20} />}
-        title="Complete your payment to keep your bed"
-        text={`${where} is held for you for about ${hoursLeft} more hour${hoursLeft === 1 ? "" : "s"}.${
-          booking.payment
-            ? ` Control number: ${booking.payment.controlNumber}.`
-            : ""
-        }`}
+        title={t("Complete your payment to keep your bed")}
+        text={
+          lang === "sw"
+            ? `${where} umeshikiliwa kwa ajili yako kwa takriban saa ${hoursLeft} zaidi.${
+                booking.payment
+                  ? ` Namba ya malipo: ${booking.payment.controlNumber}.`
+                  : ""
+              }`
+            : `${where} is held for you for about ${hoursLeft} more hour${hoursLeft === 1 ? "" : "s"}.${
+                booking.payment
+                  ? ` Control number: ${booking.payment.controlNumber}.`
+                  : ""
+              }`
+        }
         href="/dashboard/payments"
-        cta="Go to payment"
+        cta={t("Go to payment")}
         badge={<Badge status="Pending" />}
       />
     );
@@ -211,10 +226,14 @@ function NextStep({
     <Banner
       tone="success"
       icon={<CheckCircle2 size={20} />}
-      title="Your bed is secured"
-      text={`${where}. Show your QR code at the hostel to check in.`}
+      title={t("Your bed is secured")}
+      text={
+        lang === "sw"
+          ? `${where}. Onyesha QR code yako hosteli ili uingie.`
+          : `${where}. Show your QR code at the hostel to check in.`
+      }
       href="/dashboard/qr-code"
-      cta="My QR code"
+      cta={t("My QR code")}
       ctaIcon={<QrCode size={16} />}
       badge={<Badge status={booking.status} />}
     />

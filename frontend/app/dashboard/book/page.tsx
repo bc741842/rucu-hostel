@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface Bed {
   id: string;
@@ -61,6 +62,7 @@ const itemVariants = {
 };
 
 export default function BookBedPage() {
+  const { t } = useLang();
   const [beds, setBeds] = useState<Bed[]>([]);
   const [academicYear, setAcademicYear] = useState<AcademicYear | null>(null);
   const [loading, setLoading] = useState(true);
@@ -168,14 +170,13 @@ export default function BookBedPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        {academicYear ? academicYear.name : "Academic Year"}
+        {academicYear ? academicYear.name : t("Academic Year")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Book a Bed
+        {t("Book a Bed")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Choose a hostel, then a room, then a bed. Once booked, it will be held
-        for 24 hours while you complete payment.
+        {t("Choose a hostel, then a room, then a bed. Once booked, it will be held for 24 hours while you complete payment.")}
       </p>
 
       {!loading && !error && hostelList.length > 0 && (
@@ -186,7 +187,7 @@ export default function BookBedPage() {
               !selectedHostelId ? "text-navy-900" : "text-ink-light hover:text-navy-900"
             }`}
           >
-            Hostels
+            {t("Hostels")}
           </button>
           {currentHostel && (
             <>
@@ -222,7 +223,7 @@ export default function BookBedPage() {
 
       {!loading && !error && hostelList.length === 0 && (
         <div className="mt-8 rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
-          No beds are currently available.
+          {t("No beds are currently available.")}
         </div>
       )}
 
@@ -357,7 +358,7 @@ export default function BookBedPage() {
             >
               <div className="flex items-center justify-between">
                 <h3 className="font-display text-lg font-semibold text-ink">
-                  {bookingResult ? "Booking Confirmed" : "Confirm Booking"}
+                  {bookingResult ? t("Booking Confirmed") : t("Confirm Booking")}
                 </h3>
                 <button onClick={closeModal} className="text-ink-light hover:text-ink">
                   <X size={18} />
@@ -367,18 +368,17 @@ export default function BookBedPage() {
               {!bookingResult ? (
                 <>
                   <div className="mt-4 space-y-2 rounded-lg bg-cream p-4 text-sm">
-                    <Row label="Hostel" value={selectedBed.room.hostel.name} />
-                    <Row label="Room" value={selectedBed.room.number} />
-                    <Row label="Bed" value={selectedBed.number} />
+                    <Row label={t("Hostel")} value={selectedBed.room.hostel.name} />
+                    <Row label={t("Room")} value={selectedBed.room.number} />
+                    <Row label={t("Bed")} value={selectedBed.number} />
                     <Row
-                      label="Price"
+                      label={t("Price")}
                       value={`TZS ${Number(selectedBed.room.price).toLocaleString()}`}
                     />
                   </div>
 
                   <p className="mt-3 text-xs text-ink-light">
-                    This bed will be held for you for 24 hours. If payment is
-                    not completed within that time, it will be released.
+                    {t("This bed will be held for you for 24 hours. If payment is not completed within that time, it will be released.")}
                   </p>
 
                   {bookingError && (
@@ -408,22 +408,21 @@ export default function BookBedPage() {
                       <CheckCircle2 size={40} className="text-success-600" />
                     </motion.div>
                     <p className="mt-3 text-sm text-ink-light">
-                      Your bed is held. Use the control number below to make
-                      payment.
+                      {t("Your bed is held. Use the control number below to make payment.")}
                     </p>
                   </div>
                   <div className="mt-4 space-y-2 rounded-lg bg-cream p-4 text-sm">
                     <Row
-                      label="Control Number"
+                      label={t("Control Number")}
                       value={bookingResult.payment?.controlNumber ?? "-"}
                       emphasize
                     />
                     <Row
-                      label="Amount"
+                      label={t("Amount")}
                       value={`TZS ${Number(bookingResult.payment?.amount ?? 0).toLocaleString()}`}
                     />
                     <Row
-                      label="Expires"
+                      label={t("Expires")}
                       value={new Date(bookingResult.expiresAt).toLocaleString()}
                     />
                   </div>
@@ -431,7 +430,7 @@ export default function BookBedPage() {
                     onClick={closeModal}
                     className="mt-5 w-full rounded-lg border border-line py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-cream"
                   >
-                    Done
+                    {t("Done")}
                   </button>
                 </>
               )}

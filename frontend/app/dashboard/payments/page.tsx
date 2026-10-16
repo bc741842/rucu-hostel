@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BedDouble, CheckCircle2, Clock, Wallet } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface PaymentItem {
   id: string;
@@ -30,6 +31,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 export default function MyPaymentsPage() {
+  const { t } = useLang();
   const [payments, setPayments] = useState<PaymentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -57,13 +59,13 @@ export default function MyPaymentsPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Payment History
+        {t("Payment History")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        My Payments
+        {t("My Payments")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Track the status of your hostel fee payments and control numbers.
+        {t("Track the status of your hostel fee payments and control numbers.")}
       </p>
 
       {loading && <LoadingBlock />}

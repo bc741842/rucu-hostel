@@ -14,8 +14,11 @@ import {
   EyeOff,
 } from "lucide-react";
 import { useAuth } from "../../lib/auth-context";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
+import { useLang } from "../../lib/i18n";
 
 export default function RegisterPage() {
+  const { t } = useLang();
   const { registerStudent } = useAuth();
   const [form, setForm] = useState({
     regNo: "",
@@ -54,7 +57,7 @@ export default function RegisterPage() {
       setError(
         Array.isArray(messages)
           ? messages.join(", ")
-          : messages || "Registration failed. Please check your details.",
+          : messages || t("Registration failed. Please check your details."),
       );
     } finally {
       setSubmitting(false);
@@ -71,11 +74,14 @@ export default function RegisterPage() {
           </div>
           <div className="leading-tight">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-navy-100/70">
-              Ruaha Catholic University
+              {t("Ruaha Catholic University")}
             </p>
             <p className="font-display text-lg font-semibold text-white">
-              Hostel Booking System
+              {t("Hostel Booking System")}
             </p>
+          </div>
+        <div className="ml-auto">
+            <LanguageSwitcher onDark />
           </div>
         </div>
       </header>
@@ -84,20 +90,20 @@ export default function RegisterPage() {
       {/* Content */}
       <main className="mx-auto flex max-w-5xl flex-col items-center px-4 pb-20 pt-16">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-navy-700">
-          RUCU Hostel Portal
+          {t("RUCU Hostel Portal")}
         </p>
         <h1 className="mt-2 text-center font-display text-4xl font-semibold text-ink">
-          Create your account
+          {t("Create your account")}
         </h1>
         <p className="mt-3 max-w-sm text-center text-sm text-ink-light">
-          Register with your student details to start booking a hostel bed.
+          {t("Register with your student details to start booking a hostel bed.")}
         </p>
 
         <div className="mt-10 w-full max-w-lg rounded-card border border-line bg-white p-8 shadow-[0_1px_3px_rgba(20,40,75,0.08),0_8px_24px_rgba(20,40,75,0.06)]">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field
-                label="Registration Number (RegNo)"
+                label={t("Registration Number (RegNo)")}
                 icon={IdCard}
                 value={form.regNo}
                 onChange={(v) => update("regNo", v)}
@@ -105,7 +111,7 @@ export default function RegisterPage() {
                 required
               />
               <Field
-                label="Full Name"
+                label={t("Full Name")}
                 icon={User}
                 value={form.name}
                 onChange={(v) => update("name", v)}
@@ -117,20 +123,20 @@ export default function RegisterPage() {
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div>
                 <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                  Gender
+                  {t("Gender")}
                 </label>
                 <select
                   value={form.gender}
                   onChange={(e) => update("gender", e.target.value)}
                   className="w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink outline-none transition-colors focus:border-navy-900"
                 >
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
+                  <option value="male">{t("Male")}</option>
+                  <option value="female">{t("Female")}</option>
                 </select>
               </div>
               <div>
                 <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                  Year of Study
+                  {t("Year of Study")}
                 </label>
                 <select
                   value={form.year}
@@ -147,7 +153,7 @@ export default function RegisterPage() {
             </div>
 
             <Field
-              label="Course"
+              label={t("Course")}
               icon={GraduationCap}
               value={form.course}
               onChange={(v) => update("course", v)}
@@ -157,14 +163,14 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field
-                label="Phone (optional)"
+                label={t("Phone (optional)")}
                 icon={Phone}
                 value={form.phone}
                 onChange={(v) => update("phone", v)}
                 placeholder="0712345678"
               />
               <Field
-                label="Email (optional)"
+                label={t("Email (optional)")}
                 icon={Mail}
                 value={form.email}
                 onChange={(v) => update("email", v)}
@@ -174,7 +180,7 @@ export default function RegisterPage() {
             </div>
 
             <Field
-              label="Password"
+              label={t("Password")}
               icon={Lock}
               value={form.password}
               onChange={(v) => update("password", v)}
@@ -214,7 +220,7 @@ export default function RegisterPage() {
                 href="/login"
                 className="font-medium text-navy-900 hover:underline"
               >
-                Log in
+                {t("Log in")}
               </a>
             </p>
           </div>

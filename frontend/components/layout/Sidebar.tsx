@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ChevronsLeft, ChevronsRight, LogOut } from "lucide-react";
 import { useAuth } from "../../lib/auth-context";
 import { navItems } from "../../lib/nav-config";
+import { useLang } from "../../lib/i18n";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -24,6 +25,7 @@ export default function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const { t } = useLang();
 
   const roleKey = user?.type === "admin" ? user.role : "student";
 
@@ -62,7 +64,7 @@ export default function Sidebar({
               key={item.href}
               href={item.href}
               onClick={onNavigate}
-              title={collapsed ? item.label : undefined}
+              title={collapsed ? t(item.label) : undefined}
               className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
                 isActive
                   ? "bg-gold-500/15 text-gold-300"
@@ -70,7 +72,7 @@ export default function Sidebar({
               } ${collapsed ? "justify-center" : ""}`}
             >
               <Icon size={19} strokeWidth={2} className="shrink-0" />
-              {!collapsed && <span className="truncate font-medium">{item.label}</span>}
+              {!collapsed && <span className="truncate font-medium">{t(item.label)}</span>}
             </Link>
           );
         })}
@@ -92,8 +94,8 @@ export default function Sidebar({
         </div>
         <button
           onClick={logout}
-          aria-label="Log out"
-          title="Log out"
+          aria-label={t("Log out")}
+          title={t("Log out")}
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white/50 transition-colors hover:bg-white/10 hover:text-white"
         >
           <LogOut size={16} />

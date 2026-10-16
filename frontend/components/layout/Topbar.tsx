@@ -5,6 +5,8 @@ import { Menu } from "lucide-react";
 import { navItems } from "../../lib/nav-config";
 import NotificationBell from "../NotificationBell";
 import { useAuth } from "../../lib/auth-context";
+import { useLang } from "../../lib/i18n";
+import LanguageSwitcher from "../LanguageSwitcher";
 
 export default function Topbar({
   onMobileMenuToggle,
@@ -13,6 +15,7 @@ export default function Topbar({
 }) {
   const pathname = usePathname();
   const { user } = useAuth();
+  const { t } = useLang();
   const who =
     user?.type === "admin"
       ? `${user.name ?? "Admin"} · ${user.role?.replace("_", " ")}`
@@ -39,10 +42,11 @@ export default function Topbar({
           <span className="font-display text-xs font-bold">RC</span>
         </div>
         <h1 className="font-display text-base font-semibold text-white sm:text-lg">
-          {currentPage}
+          {t(currentPage)}
         </h1>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 sm:gap-4">
+        <LanguageSwitcher onDark />
         <p className="hidden max-w-[16rem] truncate text-sm capitalize text-white/60 sm:block">
           {who}
         </p>

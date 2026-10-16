@@ -8,6 +8,7 @@ import PageHeader from "../../../components/ui/PageHeader";
 import EmptyState from "../../../components/ui/EmptyState";
 import { CardSkeleton } from "../../../components/ui/Skeleton";
 import Button from "../../../components/ui/Button";
+import { useLang } from "../../../lib/i18n";
 
 interface BookingItem {
   id: string;
@@ -42,6 +43,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 export default function MyBookingsPage() {
+  const { t } = useLang();
   const [bookings, setBookings] = useState<BookingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -94,9 +96,9 @@ export default function MyBookingsPage() {
   return (
     <div>
       <PageHeader
-        eyebrow="Booking History"
-        title="My Bookings"
-        description="All the bed bookings you have made, past and present."
+        eyebrow={t("Booking History")}
+        title={t("My Bookings")}
+        description={t("All the bed bookings you have made, past and present.")}
       />
 
       {loading && (
@@ -110,7 +112,7 @@ export default function MyBookingsPage() {
         <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-card border border-danger-600/20 bg-danger-50 p-6 text-sm text-danger-600">
           <span>{error}</span>
           <Button variant="secondary" onClick={load}>
-            Try again
+            {t("Try again")}
           </Button>
         </div>
       )}
@@ -119,14 +121,14 @@ export default function MyBookingsPage() {
         <div className="mt-8">
           <EmptyState
             icon={<BedDouble size={22} />}
-            title="No bookings yet"
-            description="When you book a bed it will appear here with its payment status."
+            title={t("No bookings yet")}
+            description={t("When you book a bed it will appear here with its payment status.")}
             action={
               <a
                 href="/dashboard/book"
                 className="inline-flex rounded-lg bg-navy-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-navy-700"
               >
-                Book a bed
+                {t("Book a bed")}
               </a>
             }
           />
@@ -194,7 +196,7 @@ export default function MyBookingsPage() {
                     onClick={() => setCancelTarget(booking)}
                     className="rounded-lg border border-danger-600/30 px-3 py-1.5 text-xs font-semibold text-danger-600 transition-colors hover:bg-danger-50"
                   >
-                    Cancel Booking
+                    {t("Cancel Booking")}
                   </button>
                 </div>
               )}
@@ -223,7 +225,7 @@ export default function MyBookingsPage() {
             >
               <div className="flex items-center justify-between">
                 <h3 className="font-display text-lg font-semibold text-ink">
-                  Cancel this booking?
+                  {t("Cancel this booking?")}
                 </h3>
                 <button
                   onClick={() => !cancelling && setCancelTarget(null)}
@@ -251,7 +253,7 @@ export default function MyBookingsPage() {
                   disabled={cancelling}
                   className="flex-1 rounded-lg border border-line py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-cream"
                 >
-                  Keep Booking
+                  {t("Keep Booking")}
                 </button>
                 <motion.button
                   whileTap={{ scale: 0.97 }}

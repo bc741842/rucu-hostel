@@ -4,8 +4,11 @@ import { useState, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, IdCard, Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../lib/auth-context";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
+import { useLang } from "../../lib/i18n";
 
 export default function LoginPage() {
+  const { t } = useLang();
   const { login } = useAuth();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -21,7 +24,7 @@ export default function LoginPage() {
       await login(identifier, password);
     } catch (err: any) {
       setError(
-        err?.response?.data?.message || "Invalid Reg. No./username or password.",
+        err?.response?.data?.message || t("Invalid Reg. No./username or password."),
       );
     } finally {
       setSubmitting(false);
@@ -38,11 +41,14 @@ export default function LoginPage() {
           </div>
           <div className="leading-tight">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-navy-100/70">
-              Ruaha Catholic University
+              {t("Ruaha Catholic University")}
             </p>
             <p className="font-display text-lg font-semibold text-white">
-              Hostel Booking System
+              {t("Hostel Booking System")}
             </p>
+          </div>
+        <div className="ml-auto">
+            <LanguageSwitcher onDark />
           </div>
         </div>
       </header>
@@ -51,20 +57,20 @@ export default function LoginPage() {
       {/* Content */}
       <main className="mx-auto flex max-w-5xl flex-col items-center px-4 pb-20 pt-16">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-navy-700">
-          RUCU Hostel Portal
+          {t("RUCU Hostel Portal")}
         </p>
         <h1 className="mt-2 text-center font-display text-4xl font-semibold text-ink">
-          Log in to continue
+          {t("Log in to continue")}
         </h1>
         <p className="mt-3 max-w-sm text-center text-sm text-ink-light">
-          Students, wardens, and staff all sign in here.
+          {t("Students, wardens, and staff all sign in here.")}
         </p>
 
         <div className="mt-10 w-full max-w-md rounded-card border border-line bg-white p-8 shadow-[0_1px_3px_rgba(20,40,75,0.08),0_8px_24px_rgba(20,40,75,0.06)]">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                Registration Number or Username
+                {t("Registration Number or Username")}
               </label>
               <div className="flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-2.5 transition-colors focus-within:border-navy-900">
                 <IdCard size={16} className="text-ink-light" />
@@ -83,7 +89,7 @@ export default function LoginPage() {
 
             <div>
               <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                Password
+                {t("Password")}
               </label>
               <div className="flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-2.5 transition-colors focus-within:border-navy-900">
                 <Lock size={16} className="text-ink-light" />
@@ -113,7 +119,7 @@ export default function LoginPage() {
                   href="/forgot-password"
                   className="text-xs font-medium text-navy-900 hover:underline"
                 >
-                  Forgot password?
+                  {t("Forgot password?")}
                 </a>
               </div>
             </div>
@@ -148,7 +154,7 @@ export default function LoginPage() {
                 href="/register"
                 className="font-medium text-navy-900 hover:underline"
               >
-                Create an account
+                {t("Create an account")}
               </a>
             </p>
           </div>
