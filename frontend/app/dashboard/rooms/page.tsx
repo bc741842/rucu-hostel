@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { DoorOpen, Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface Hostel {
   id: string;
@@ -21,6 +22,7 @@ interface Room {
 }
 
 export default function RoomsPage() {
+  const { t } = useLang();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [hostels, setHostels] = useState<Hostel[]>([]);
   const [hostelFilter, setHostelFilter] = useState("");
@@ -139,13 +141,13 @@ export default function RoomsPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-            Manage
+            {t("Manage")}
           </p>
           <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-            Rooms
+            {t("Rooms")}
           </h2>
           <p className="mt-2 max-w-lg text-sm text-ink-light">
-            Add, edit, or remove rooms and their pricing.
+            {t("Add, edit, or remove rooms and their pricing.")}
           </p>
         </div>
         <button
@@ -153,7 +155,7 @@ export default function RoomsPage() {
           disabled={hostels.length === 0}
           className="flex shrink-0 items-center gap-2 rounded-lg bg-navy-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-navy-700 disabled:opacity-50"
         >
-          <Plus size={16} /> Add Room
+          <Plus size={16} /> {t("Add Room")}
         </button>
       </div>
 
@@ -165,7 +167,7 @@ export default function RoomsPage() {
             onChange={(e) => setHostelFilter(e.target.value)}
             className="rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink outline-none focus:border-navy-900"
           >
-            <option value="">All hostels</option>
+            <option value="">{t("All hostels")}</option>
             {hostels.map((h) => (
               <option key={h.id} value={h.id}>
                 {h.name}
@@ -185,7 +187,7 @@ export default function RoomsPage() {
 
       {!loading && !error && rooms.length === 0 && (
         <div className="mt-8 rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
-          No rooms found.
+          {t("No rooms found.")}
         </div>
       )}
 
@@ -194,12 +196,12 @@ export default function RoomsPage() {
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-line bg-cream">
-                <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">Room</th>
-                <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">Hostel</th>
-                <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">Floor</th>
-                <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">Price</th>
-                <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">Beds</th>
-                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wide text-ink-light">Action</th>
+                <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">{t("Room")}</th>
+                <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">{t("Hostel")}</th>
+                <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">{t("Floor")}</th>
+                <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">{t("Price")}</th>
+                <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">{t("Beds")}</th>
+                <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wide text-ink-light">{t("Action")}</th>
               </tr>
             </thead>
             <tbody>
@@ -269,7 +271,7 @@ export default function RoomsPage() {
                 {!editing && (
                   <div>
                     <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                      Hostel
+                      {t("Hostel")}
                     </label>
                     <select
                       value={form.hostelId}
@@ -286,7 +288,7 @@ export default function RoomsPage() {
                 )}
                 <div>
                   <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                    Room Number
+                    {t("Room Number")}
                   </label>
                   <input
                     value={form.number}
@@ -298,7 +300,7 @@ export default function RoomsPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                      Floor
+                      {t("Floor")}
                     </label>
                     <input
                       type="number"
@@ -310,7 +312,7 @@ export default function RoomsPage() {
                   </div>
                   <div>
                     <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                      Price (TZS)
+                      {t("Price (TZS)")}
                     </label>
                     <input
                       type="number"
@@ -364,8 +366,7 @@ export default function RoomsPage() {
                 Delete Room {deleteTarget.number}?
               </h3>
               <p className="mt-2 text-sm text-ink-light">
-                This cannot be undone. Rooms with existing beds cannot be
-                deleted.
+                {t("This cannot be undone. Rooms with existing beds cannot be deleted.")}
               </p>
               {deleteError && (
                 <p className="mt-3 rounded-lg bg-danger-50 px-3 py-2 text-sm text-danger-600">
@@ -377,7 +378,7 @@ export default function RoomsPage() {
                   onClick={() => setDeleteTarget(null)}
                   className="flex-1 rounded-lg border border-line py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-cream"
                 >
-                  Cancel
+                  {t("Cancel")}
                 </button>
                 <button
                   onClick={confirmDelete}

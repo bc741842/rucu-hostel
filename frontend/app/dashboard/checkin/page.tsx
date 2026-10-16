@@ -12,6 +12,7 @@ import {
   KeyRound,
 } from "lucide-react";
 import { api } from "../../../lib/api";
+import { useLang } from "../../../lib/i18n";
 
 const SCANNER_ELEMENT_ID = "qr-scanner-view";
 
@@ -22,6 +23,7 @@ interface CheckInResult {
 }
 
 export default function CheckInPage() {
+  const { t } = useLang();
   const [cameraOn, setCameraOn] = useState(false);
   const [cameraError, setCameraError] = useState("");
   const [manualCode, setManualCode] = useState("");
@@ -131,13 +133,13 @@ export default function CheckInPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Hostel Operations
+        {t("Hostel Operations")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        QR Check-in
+        {t("QR Check-in")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Scan a student's QR code at the gate, or enter their code manually.
+        {t("Scan a student's QR code at the gate, or enter their code manually.")}
       </p>
 
       <div className="mt-6 grid max-w-2xl gap-6 md:grid-cols-2">
@@ -145,21 +147,21 @@ export default function CheckInPage() {
         <div className="rounded-card border border-line bg-white p-5">
           <div className="flex items-center justify-between">
             <p className="flex items-center gap-1.5 text-sm font-semibold text-ink">
-              <ScanLine size={15} /> Camera scanner
+              <ScanLine size={15} /> {t("Camera scanner")}
             </p>
             {!cameraOn ? (
               <button
                 onClick={startScanner}
                 className="flex items-center gap-1.5 rounded-full bg-navy-900 px-3.5 py-1.5 text-xs font-medium text-white hover:bg-navy-700"
               >
-                <Camera size={13} /> Start
+                <Camera size={13} /> {t("Start")}
               </button>
             ) : (
               <button
                 onClick={stopScanner}
                 className="flex items-center gap-1.5 rounded-full bg-danger-50 px-3.5 py-1.5 text-xs font-medium text-danger-600 hover:bg-danger-50/70"
               >
-                <CameraOff size={13} /> Stop
+                <CameraOff size={13} /> {t("Stop")}
               </button>
             )}
           </div>
@@ -184,7 +186,7 @@ export default function CheckInPage() {
             {!cameraOn && (
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                 <p className="text-center text-xs text-ink-light">
-                  Camera preview appears here once started.
+                  {t("Camera preview appears here once started.")}
                 </p>
               </div>
             )}
@@ -198,17 +200,17 @@ export default function CheckInPage() {
         {/* Manual entry */}
         <div className="rounded-card border border-line bg-white p-5">
           <p className="flex items-center gap-1.5 text-sm font-semibold text-ink">
-            <KeyRound size={15} /> Enter code manually
+            <KeyRound size={15} /> {t("Enter code manually")}
           </p>
           <p className="mt-1 text-xs text-ink-light">
-            Use this if the camera isn't available.
+            {t("Use this if the camera isn't available.")}
           </p>
           <form onSubmit={handleManualSubmit} className="mt-4 flex gap-2">
             <input
               type="text"
               value={manualCode}
               onChange={(e) => setManualCode(e.target.value)}
-              placeholder="Paste or type the QR code"
+              placeholder={t("Paste or type the QR code")}
               className="flex-1 rounded-lg border border-line bg-cream px-3 py-2.5 text-sm text-ink focus:border-navy-500 focus:outline-none"
             />
             <button

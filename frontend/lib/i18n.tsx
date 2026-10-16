@@ -129,6 +129,304 @@ const SW: Record<string, string> = {
   "Payment History": "Historia ya Malipo",
   "Track the status of your hostel fee payments and control numbers.":
     "Fuatilia hali ya malipo ya ada za hosteli na namba za malipo.",
+
+  // Remaining pages
+  "Communication":
+    "Mawasiliano",
+  "Post a notice to every student, or target just one hostel. You can optionally attach a PDF document (forms, rules, official letters).":
+    "Tuma tangazo kwa kila mwanafunzi, au kwa hosteli moja tu. Unaweza pia kuambatisha hati ya PDF (fomu, kanuni, barua rasmi).",
+  "New Announcement":
+    "Tangazo Jipya",
+  "All Hostels (everyone)":
+    "Hosteli Zote (kila mtu)",
+  "Attach a PDF document (optional)":
+    "Ambatisha hati ya PDF (si lazima)",
+  "All Announcements":
+    "Matangazo Yote",
+  "No announcements have been posted yet.":
+    "Bado hakuna tangazo lililotumwa.",
+  "Title":
+    "Kichwa",
+  "Message":
+    "Ujumbe",
+  "Document title (e.g. Hostel Rules 2026/27)":
+    "Kichwa cha hati (mfano: Kanuni za Hosteli 2026/27)",
+  "RUCU Hostel":
+    "Hosteli ya RUCU",
+  "Important updates and notices from the hostel administration.":
+    "Taarifa na matangazo muhimu kutoka kwa utawala wa hosteli.",
+  "There are no announcements right now.":
+    "Hakuna matangazo kwa sasa.",
+  "All Hostels":
+    "Hosteli Zote",
+  "Super Admin":
+    "Msimamizi Mkuu",
+  "A record of sensitive actions taken by staff — payment confirmations, maintenance status changes, announcements, and other data changes.":
+    "Kumbukumbu za vitendo nyeti vilivyofanywa na wafanyakazi: uthibitisho wa malipo, mabadiliko ya matengenezo, matangazo na mabadiliko mengine ya data.",
+  "Staff member":
+    "Mfanyakazi",
+  "All staff":
+    "Wafanyakazi wote",
+  "Action contains":
+    "Kitendo kina",
+  "From":
+    "Kuanzia",
+  "Apply":
+    "Tumia",
+  "Clear":
+    "Futa",
+  "Loading...":
+    "Inapakia...",
+  "No audit log entries match these filters.":
+    "Hakuna kumbukumbu zinazolingana na vichujio hivi.",
+  "Before":
+    "Kabla",
+  "After":
+    "Baada",
+  "e.g. payment, maintenance":
+    "mfano: malipo, matengenezo",
+  "Manage":
+    "Simamia",
+  "All hostels":
+    "Hosteli zote",
+  "All rooms":
+    "Vyumba vyote",
+  "No beds found for this filter.":
+    "Hakuna vitanda vinavyolingana na kichujio hiki.",
+  "Bed Number":
+    "Namba ya Kitanda",
+  "Status":
+    "Hali",
+  "Free":
+    "Wazi",
+  "Held":
+    "Kimeshikiliwa",
+  "Occupied":
+    "Kimekaliwa",
+  "This cannot be undone. Beds with an active booking cannot be deleted.":
+    "Hili haliwezi kutenduliwa. Vitanda vyenye uhifadhi hai haviwezi kufutwa.",
+  "Cancel":
+    "Ghairi",
+  "Community":
+    "Jamii",
+  "Read-only view of hostel group chats, including shared photos, audio, video and other files. Remove any message that breaks the rules.":
+    "Mwonekano wa kusoma tu wa mazungumzo ya vikundi vya hosteli, ikiwemo picha, sauti, video na faili zilizotumwa. Ondoa ujumbe wowote unaovunja kanuni.",
+  "All Hostels (global group)":
+    "Hosteli Zote (kundi la wote)",
+  "Loading chat...":
+    "Inapakia mazungumzo...",
+  "No messages in this group yet.":
+    "Bado hakuna ujumbe kwenye kundi hili.",
+  "Download":
+    "Pakua",
+  "Delete message":
+    "Futa ujumbe",
+  "Talk with your hostel mates, or with everyone across the hostels.":
+    "Zungumza na wenzako wa hosteli, au na kila mtu katika hosteli zote.",
+  "My Hostel":
+    "Hosteli Yangu",
+  "No messages yet in your hostel group.":
+    "Bado hakuna ujumbe kwenye kundi la hosteli yako.",
+  "You need an active bed booking to join this chat.":
+    "Unahitaji uhifadhi hai wa kitanda ili ujiunge na mazungumzo haya.",
+  "No messages yet. Say hello!":
+    "Bado hakuna ujumbe. Anza kwa salamu!",
+  "Emoji":
+    "Emoji",
+  "Attach a file (up to 10MB)":
+    "Ambatisha faili (hadi 10MB)",
+  "Hostel Operations":
+    "Uendeshaji wa Hosteli",
+  "Scan a student's QR code at the gate, or enter their code manually.":
+    "Changanua QR code ya mwanafunzi getini, au andika namba yake mwenyewe.",
+  "Camera scanner":
+    "Kichanganuzi cha kamera",
+  "Start":
+    "Anza",
+  "Stop":
+    "Simamisha",
+  "Camera preview appears here once started.":
+    "Picha ya kamera itaonekana hapa ukishaanza.",
+  "Enter code manually":
+    "Andika namba mwenyewe",
+  "Use this if the camera isn't available.":
+    "Tumia hii kamera isipopatikana.",
+  "Paste or type the QR code":
+    "Bandika au andika namba ya QR",
+  "Accounts":
+    "Hesabu",
+  "No pending payments right now.":
+    "Hakuna malipo yanayosubiri kwa sasa.",
+  "Control No.":
+    "Namba ya Malipo",
+  "Student":
+    "Mwanafunzi",
+  "Action":
+    "Kitendo",
+  "Confirm":
+    "Thibitisha",
+  "Confirm Payment":
+    "Thibitisha Malipo",
+  "Only confirm after verifying this control number was actually paid at the bank/payment channel.":
+    "Thibitisha tu baada ya kuhakiki kuwa namba hii ya malipo imelipwa kweli benki au kwenye njia ya malipo.",
+  "Add, edit, or remove hostels available for booking.":
+    "Ongeza, hariri au ondoa hosteli zinazopatikana kwa uhifadhi.",
+  "Add Hostel":
+    "Ongeza Hosteli",
+  "Name":
+    "Jina",
+  "Gender Allowed":
+    "Jinsia Inayoruhusiwa",
+  "Location (optional)":
+    "Eneo (si lazima)",
+  "This cannot be undone. Hostels with existing rooms cannot be deleted.":
+    "Hili haliwezi kutenduliwa. Hosteli zenye vyumba haziwezi kufutwa.",
+  "Manage Maintenance Requests":
+    "Simamia Maombi ya Matengenezo",
+  "Track and resolve issues reported by students.":
+    "Fuatilia na tatua matatizo yaliyoripotiwa na wanafunzi.",
+  "All statuses":
+    "Hali zote",
+  "Open":
+    "Wazi",
+  "In Progress":
+    "Inashughulikiwa",
+  "Resolved":
+    "Imetatuliwa",
+  "No maintenance requests match this filter.":
+    "Hakuna maombi ya matengenezo yanayolingana na kichujio hiki.",
+  "Optional note for the student (e.g. what was fixed)":
+    "Maelezo kwa mwanafunzi (si lazima, mfano: kilichorekebishwa)",
+  "Support":
+    "Msaada",
+  "Maintenance Requests":
+    "Maombi ya Matengenezo",
+  "Report a problem with your room or any common area in your hostel.":
+    "Ripoti tatizo kwenye chumba chako au eneo lolote la pamoja katika hosteli yako.",
+  "Report a new issue":
+    "Ripoti tatizo jipya",
+  "Location":
+    "Mahali",
+  "Describe the problem":
+    "Elezea tatizo",
+  "Report submitted.":
+    "Ripoti imetumwa.",
+  "My reports":
+    "Ripoti zangu",
+  "You haven't reported anything yet.":
+    "Bado hujaripoti chochote.",
+  "e.g. My room (Room 12, Bed B) or 2nd floor common bathroom":
+    "mfano: Chumba changu (Chumba 12, Kitanda B) au bafu la pamoja ghorofa ya 2",
+  "What's wrong and since when?":
+    "Tatizo ni nini na tangu lini?",
+  "Notifications":
+    "Arifa",
+  "Mark all as read":
+    "Weka zote kuwa zimesomwa",
+  "No notifications yet":
+    "Bado hakuna arifa",
+  "Check-in":
+    "Kuingia",
+  "My Check-in QR Code":
+    "QR Code Yangu ya Kuingia",
+  "Show this code to the warden or admin at the hostel gate to check in.":
+    "Onyesha namba hii kwa mlezi au msimamizi getini mwa hosteli ili uingie.",
+  "You're already checked in":
+    "Tayari umeshaingia",
+  "Scan at the hostel gate":
+    "Changanua getini mwa hosteli",
+  "Feedback":
+    "Maoni",
+  "What students think of their hostels.":
+    "Wanafunzi wanavyoona hosteli zao.",
+  "No ratings submitted yet.":
+    "Bado hakuna tathmini zilizotumwa.",
+  "Recent feedback":
+    "Maoni ya hivi karibuni",
+  "No written feedback yet.":
+    "Bado hakuna maoni yaliyoandikwa.",
+  "Rate Your Hostel":
+    "Tathmini Hosteli Yako",
+  "Tell us how your stay has been. You can update this anytime.":
+    "Tuambie makazi yako yamekuwaje. Unaweza kubadilisha wakati wowote.",
+  "Thank you for your feedback!":
+    "Asante kwa maoni yako!",
+  "Anything you'd like to share? (optional)":
+    "Kuna unachotaka kushiriki? (si lazima)",
+  "Insights":
+    "Uchambuzi",
+  "Reports Dashboard":
+    "Dashibodi ya Ripoti",
+  "Occupancy, revenue, check-ins and maintenance at a glance.":
+    "Ukaaji, mapato, walioingia na matengenezo kwa muhtasari.",
+  "Occupancy by hostel":
+    "Ukaaji kwa hosteli",
+  "No hostels found.":
+    "Hakuna hosteli zilizopatikana.",
+  "Revenue by month":
+    "Mapato kwa mwezi",
+  "No paid payments recorded yet for this academic year.":
+    "Bado hakuna malipo yaliyorekodiwa kwa mwaka huu wa masomo.",
+  "Maintenance requests":
+    "Maombi ya matengenezo",
+  "Waiting list by hostel":
+    "Orodha ya kusubiri kwa hosteli",
+  "No one is currently waiting.":
+    "Hakuna anayesubiri kwa sasa.",
+  "Occupancy":
+    "Ukaaji",
+  "Revenue":
+    "Mapato",
+  "Checked In":
+    "Walioingia",
+  "Open Issues":
+    "Matatizo Yaliyo Wazi",
+  "Students who share your room for this academic year.":
+    "Wanafunzi wanaoshiriki chumba chako mwaka huu wa masomo.",
+  "No one else has booked into your room yet.":
+    "Bado hakuna mwingine aliyehifadhi kwenye chumba chako.",
+  "Add, edit, or remove rooms and their pricing.":
+    "Ongeza, hariri au ondoa vyumba na bei zake.",
+  "Add Room":
+    "Ongeza Chumba",
+  "No rooms found.":
+    "Hakuna vyumba vilivyopatikana.",
+  "Floor":
+    "Ghorofa",
+  "Room Number":
+    "Namba ya Chumba",
+  "Price (TZS)":
+    "Bei (TZS)",
+  "This cannot be undone. Rooms with existing beds cannot be deleted.":
+    "Hili haliwezi kutenduliwa. Vyumba vyenye vitanda haviwezi kufutwa.",
+  "Bed Waiting List":
+    "Orodha ya Kusubiri Kitanda",
+  "Join a Waiting List":
+    "Jiunge na Orodha ya Kusubiri",
+  "You are already on the waiting list for every available hostel.":
+    "Tayari uko kwenye orodha ya kusubiri ya kila hosteli iliyopo.",
+  "My Waiting List Entries":
+    "Orodha Zangu za Kusubiri",
+  "A bed is becoming available — please check back soon.":
+    "Kitanda kinakaribia kupatikana. Tafadhali rudi hivi karibuni.",
+  "Bed Waiting Queue":
+    "Foleni ya Kusubiri Kitanda",
+  "A FIFO list of students waiting for a bed, by hostel. Contact them in this order as beds become available.":
+    "Orodha ya wanafunzi wanaosubiri kitanda kwa hosteli, aliyetangulia anahudumiwa kwanza. Wasiliana nao kwa mpangilio huu vitanda vinapopatikana.",
+  "No students are currently waiting.":
+    "Hakuna wanafunzi wanaosubiri kwa sasa.",
+  "Reset your password":
+    "Weka nenosiri jipya",
+  "Use a different Reg. No.":
+    "Tumia namba nyingine ya usajili",
+  "Your password has been changed successfully.":
+    "Nenosiri lako limebadilishwa kikamilifu.",
+  "6-digit OTP":
+    "OTP ya tarakimu 6",
+  "New Password":
+    "Nenosiri Jipya",
+  "Confirm New Password":
+    "Thibitisha Nenosiri Jipya",
 };
 
 interface LangContextValue {

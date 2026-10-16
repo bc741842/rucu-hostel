@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ShieldAlert, Filter, ChevronDown, ChevronUp } from "lucide-react";
 import { api } from "../../../lib/api";
+import { useLang } from "../../../lib/i18n";
 
 interface AuditLogEntry {
   id: string;
@@ -50,6 +51,7 @@ function roleBadgeClasses(role: string): string {
 }
 
 export default function AuditLogPage() {
+  const { t } = useLang();
   const [logs, setLogs] = useState<AuditLogEntry[]>([]);
   const [actors, setActors] = useState<Actor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -101,14 +103,13 @@ export default function AuditLogPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Super Admin
+        {t("Super Admin")}
       </p>
       <h2 className="mt-1 flex items-center gap-2 font-display text-3xl font-semibold text-ink">
-        <ShieldAlert size={26} /> Audit Log
+        <ShieldAlert size={26} /> {t("Audit Log")}
       </h2>
       <p className="mt-2 max-w-2xl text-sm text-ink-light">
-        A record of sensitive actions taken by staff — payment confirmations,
-        maintenance status changes, announcements, and other data changes.
+        {t("A record of sensitive actions taken by staff — payment confirmations, maintenance status changes, announcements, and other data changes.")}
       </p>
 
       {/* Filters */}
@@ -118,14 +119,14 @@ export default function AuditLogPage() {
       >
         <div>
           <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-            Staff member
+            {t("Staff member")}
           </label>
           <select
             value={actorFilter}
             onChange={(e) => setActorFilter(e.target.value)}
             className="rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink outline-none focus:border-navy-900"
           >
-            <option value="">All staff</option>
+            <option value="">{t("All staff")}</option>
             {actors.map((a) => (
               <option key={a.actorId} value={a.actorId}>
                 {a.actorName} ({a.actorRole})
@@ -136,20 +137,20 @@ export default function AuditLogPage() {
 
         <div>
           <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-            Action contains
+            {t("Action contains")}
           </label>
           <input
             type="text"
             value={actionFilter}
             onChange={(e) => setActionFilter(e.target.value)}
-            placeholder="e.g. payment, maintenance"
+            placeholder={t("e.g. payment, maintenance")}
             className="rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink outline-none placeholder:text-ink-light/50 focus:border-navy-900"
           />
         </div>
 
         <div>
           <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-            From
+            {t("From")}
           </label>
           <input
             type="date"
@@ -175,14 +176,14 @@ export default function AuditLogPage() {
           type="submit"
           className="flex items-center gap-1.5 rounded-lg bg-navy-900 px-4 py-2 text-sm font-medium text-white hover:bg-navy-700"
         >
-          <Filter size={14} /> Apply
+          <Filter size={14} /> {t("Apply")}
         </button>
         <button
           type="button"
           onClick={handleClearFilters}
           className="rounded-lg border border-line px-4 py-2 text-sm font-medium text-ink-light hover:bg-cream"
         >
-          Clear
+          {t("Clear")}
         </button>
       </form>
 
@@ -190,11 +191,11 @@ export default function AuditLogPage() {
       <div className="mt-6 overflow-hidden rounded-card border border-line bg-white">
         {loading ? (
           <div className="py-12 text-center text-sm text-ink-light">
-            Loading...
+            {t("Loading...")}
           </div>
         ) : logs.length === 0 ? (
           <div className="py-12 text-center text-sm text-ink-light">
-            No audit log entries match these filters.
+            {t("No audit log entries match these filters.")}
           </div>
         ) : (
           <div className="divide-y divide-line">
@@ -256,7 +257,7 @@ export default function AuditLogPage() {
                       {log.beforeData && (
                         <div>
                           <p className="mb-1 font-semibold uppercase tracking-wide text-ink-light">
-                            Before
+                            {t("Before")}
                           </p>
                           <pre className="overflow-x-auto whitespace-pre-wrap break-words font-mono text-ink">
                             {JSON.stringify(log.beforeData, null, 2)}
@@ -266,7 +267,7 @@ export default function AuditLogPage() {
                       {log.afterData && (
                         <div>
                           <p className="mb-1 font-semibold uppercase tracking-wide text-ink-light">
-                            After
+                            {t("After")}
                           </p>
                           <pre className="overflow-x-auto whitespace-pre-wrap break-words font-mono text-ink">
                             {JSON.stringify(log.afterData, null, 2)}

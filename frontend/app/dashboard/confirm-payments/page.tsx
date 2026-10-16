@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface PaymentRow {
   id: string;
@@ -29,6 +30,7 @@ interface PaymentRow {
 }
 
 export default function ConfirmPaymentsPage() {
+  const { t } = useLang();
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -76,10 +78,10 @@ export default function ConfirmPaymentsPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Accounts
+        {t("Accounts")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Confirm Payments
+        {t("Confirm Payments")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
         Review control numbers received at the bank, then confirm them here
@@ -96,7 +98,7 @@ export default function ConfirmPaymentsPage() {
 
       {!loading && !error && payments.length === 0 && (
         <div className="mt-8 rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
-          No pending payments right now.
+          {t("No pending payments right now.")}
         </div>
       )}
 
@@ -106,19 +108,19 @@ export default function ConfirmPaymentsPage() {
             <thead>
               <tr className="border-b border-line bg-cream">
                 <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">
-                  Control No.
+                  {t("Control No.")}
                 </th>
                 <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">
-                  Student
+                  {t("Student")}
                 </th>
                 <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">
-                  Bed
+                  {t("Bed")}
                 </th>
                 <th className="px-5 py-3 text-[11px] font-semibold uppercase tracking-wide text-ink-light">
-                  Amount
+                  {t("Amount")}
                 </th>
                 <th className="px-5 py-3 text-right text-[11px] font-semibold uppercase tracking-wide text-ink-light">
-                  Action
+                  {t("Action")}
                 </th>
               </tr>
             </thead>
@@ -149,7 +151,7 @@ export default function ConfirmPaymentsPage() {
                       className="inline-flex items-center gap-1.5 rounded-lg bg-navy-900 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-navy-700"
                     >
                       <BadgeCheck size={13} />
-                      Confirm
+                      {t("Confirm")}
                     </button>
                   </td>
                 </tr>
@@ -179,7 +181,7 @@ export default function ConfirmPaymentsPage() {
             >
               <div className="flex items-center justify-between">
                 <h3 className="font-display text-lg font-semibold text-ink">
-                  Confirm Payment
+                  {t("Confirm Payment")}
                 </h3>
                 <button
                   onClick={() => !confirming && setConfirmTarget(null)}
@@ -190,21 +192,20 @@ export default function ConfirmPaymentsPage() {
               </div>
 
               <div className="mt-4 space-y-2 rounded-lg bg-cream p-4 text-sm">
-                <Row label="Control No." value={confirmTarget.controlNumber} emphasize />
+                <Row label={t("Control No.")} value={confirmTarget.controlNumber} emphasize />
                 <Row
-                  label="Student"
+                  label={t("Student")}
                   value={`${confirmTarget.booking.student.name} (${confirmTarget.booking.student.regNo})`}
                 />
                 <Row
-                  label="Amount"
+                  label={t("Amount")}
                   value={`TZS ${Number(confirmTarget.amount).toLocaleString()}`}
                 />
               </div>
 
               <p className="mt-3 flex items-start gap-1.5 text-xs text-ink-light">
                 <Wallet size={13} className="mt-0.5 shrink-0" />
-                Only confirm after verifying this control number was actually
-                paid at the bank/payment channel.
+                {t("Only confirm after verifying this control number was actually paid at the bank/payment channel.")}
               </p>
 
               {confirmError && (

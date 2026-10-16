@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface AcademicYear {
   id: string;
@@ -47,6 +48,7 @@ function formatTsh(n: number) {
 }
 
 export default function ReportsPage() {
+  const { t } = useLang();
   const [years, setYears] = useState<AcademicYear[]>([]);
   const [yearId, setYearId] = useState("");
   const [data, setData] = useState<Dashboard | null>(null);
@@ -90,13 +92,13 @@ export default function ReportsPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Insights
+        {t("Insights")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Reports Dashboard
+        {t("Reports Dashboard")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Occupancy, revenue, check-ins and maintenance at a glance.
+        {t("Occupancy, revenue, check-ins and maintenance at a glance.")}
       </p>
 
       <div className="mt-5">
@@ -127,28 +129,28 @@ export default function ReportsPage() {
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <StatTile
               icon={BedDouble}
-              label="Occupancy"
+              label={t("Occupancy")}
               value={`${data.overall.occupancyRate}%`}
               sub={`${data.overall.occupiedBeds}/${data.overall.totalBeds} beds`}
               color="navy"
             />
             <StatTile
               icon={Wallet}
-              label="Revenue"
+              label={t("Revenue")}
               value={formatTsh(data.revenue.total)}
               sub="Paid this year"
               color="gold"
             />
             <StatTile
               icon={LogIn}
-              label="Checked In"
+              label={t("Checked In")}
               value={String(data.checkIns.checkedIn)}
               sub={`${data.checkIns.paidNotCheckedIn} paid, not yet in`}
               color="success"
             />
             <StatTile
               icon={Wrench}
-              label="Open Issues"
+              label={t("Open Issues")}
               value={String(data.maintenance.Open + data.maintenance.InProgress)}
               sub={`${data.maintenance.Resolved} resolved`}
               color="danger"
@@ -158,7 +160,7 @@ export default function ReportsPage() {
           {/* Occupancy per hostel */}
           <section className="rounded-card border border-line bg-white p-5">
             <p className="text-sm font-semibold text-ink">
-              Occupancy by hostel
+              {t("Occupancy by hostel")}
             </p>
             <div className="mt-4 space-y-3">
               {data.occupancy.map((o, i) => (
@@ -184,7 +186,7 @@ export default function ReportsPage() {
                 </motion.div>
               ))}
               {data.occupancy.length === 0 && (
-                <p className="text-xs text-ink-light">No hostels found.</p>
+                <p className="text-xs text-ink-light">{t("No hostels found.")}</p>
               )}
             </div>
           </section>
@@ -192,11 +194,11 @@ export default function ReportsPage() {
           {/* Revenue trend */}
           <section className="rounded-card border border-line bg-white p-5">
             <p className="text-sm font-semibold text-ink">
-              Revenue by month
+              {t("Revenue by month")}
             </p>
             {data.revenue.trend.length === 0 ? (
               <p className="mt-3 text-xs text-ink-light">
-                No paid payments recorded yet for this academic year.
+                {t("No paid payments recorded yet for this academic year.")}
               </p>
             ) : (
               <div className="mt-4 flex items-end gap-3" style={{ height: 140 }}>
@@ -227,17 +229,17 @@ export default function ReportsPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <section className="rounded-card border border-line bg-white p-5">
               <p className="flex items-center gap-1.5 text-sm font-semibold text-ink">
-                <Wrench size={14} /> Maintenance requests
+                <Wrench size={14} /> {t("Maintenance requests")}
               </p>
               <div className="mt-3 space-y-2 text-sm">
-                <MaintRow label="Open" value={data.maintenance.Open} color="danger" />
+                <MaintRow label={t("Open")} value={data.maintenance.Open} color="danger" />
                 <MaintRow
-                  label="In Progress"
+                  label={t("In Progress")}
                   value={data.maintenance.InProgress}
                   color="gold"
                 />
                 <MaintRow
-                  label="Resolved"
+                  label={t("Resolved")}
                   value={data.maintenance.Resolved}
                   color="success"
                 />
@@ -246,12 +248,12 @@ export default function ReportsPage() {
 
             <section className="rounded-card border border-line bg-white p-5">
               <p className="flex items-center gap-1.5 text-sm font-semibold text-ink">
-                <Hourglass size={14} /> Waiting list by hostel
+                <Hourglass size={14} /> {t("Waiting list by hostel")}
               </p>
               <div className="mt-3 space-y-2 text-sm">
                 {data.waitingList.length === 0 ? (
                   <p className="text-xs text-ink-light">
-                    No one is currently waiting.
+                    {t("No one is currently waiting.")}
                   </p>
                 ) : (
                   data.waitingList.map((w) => (

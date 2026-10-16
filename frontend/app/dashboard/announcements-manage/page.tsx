@@ -17,6 +17,7 @@ import {
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
 import { useToast } from "../../../components/ui/Toast";
+import { useLang } from "../../../lib/i18n";
 
 interface Hostel {
   id: string;
@@ -51,6 +52,7 @@ function formatSize(bytes: number): string {
 }
 
 export default function ManageAnnouncementsPage() {
+  const { t } = useLang();
   const toast = useToast();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [hostels, setHostels] = useState<Hostel[]>([]);
@@ -177,33 +179,32 @@ export default function ManageAnnouncementsPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Communication
+        {t("Communication")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Manage Announcements
+        {t("Manage Announcements")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Post a notice to every student, or target just one hostel. You can
-        optionally attach a PDF document (forms, rules, official letters).
+        {t("Post a notice to every student, or target just one hostel. You can optionally attach a PDF document (forms, rules, official letters).")}
       </p>
 
       {/* Create form */}
       <div className="mt-6 rounded-card border border-line bg-white p-5">
         <h3 className="font-display text-base font-semibold text-ink">
-          New Announcement
+          {t("New Announcement")}
         </h3>
         <div className="mt-3 flex flex-col gap-3">
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
+            placeholder={t("Title")}
             className="rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink focus:border-navy-500 focus:outline-none"
           />
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Message"
+            placeholder={t("Message")}
             rows={3}
             className="rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink focus:border-navy-500 focus:outline-none"
           />
@@ -213,7 +214,7 @@ export default function ManageAnnouncementsPage() {
               onChange={(e) => setHostelId(e.target.value)}
               className="flex-1 rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink focus:border-navy-500 focus:outline-none"
             >
-              <option value="">All Hostels (everyone)</option>
+              <option value="">{t("All Hostels (everyone)")}</option>
               {hostels.map((h) => (
                 <option key={h.id} value={h.id}>
                   {h.name} only
@@ -227,7 +228,7 @@ export default function ManageAnnouncementsPage() {
             {!file ? (
               <label className="flex cursor-pointer items-center gap-2 text-sm text-ink-light">
                 <Paperclip size={16} />
-                Attach a PDF document (optional)
+                {t("Attach a PDF document (optional)")}
                 <input
                   type="file"
                   accept="application/pdf"
@@ -257,7 +258,7 @@ export default function ManageAnnouncementsPage() {
                   type="text"
                   value={documentTitle}
                   onChange={(e) => setDocumentTitle(e.target.value)}
-                  placeholder="Document title (e.g. Hostel Rules 2026/27)"
+                  placeholder={t("Document title (e.g. Hostel Rules 2026/27)")}
                   className="rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink focus:border-navy-500 focus:outline-none"
                 />
               </div>
@@ -288,7 +289,7 @@ export default function ManageAnnouncementsPage() {
 
       {/* List */}
       <h3 className="mt-8 font-display text-base font-semibold text-ink">
-        All Announcements
+        {t("All Announcements")}
       </h3>
 
       {loading && <LoadingBlock />}
@@ -301,7 +302,7 @@ export default function ManageAnnouncementsPage() {
 
       {!loading && !error && announcements.length === 0 && (
         <div className="mt-4 rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
-          No announcements have been posted yet.
+          {t("No announcements have been posted yet.")}
         </div>
       )}
 

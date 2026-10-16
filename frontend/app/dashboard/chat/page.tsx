@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { useAuth } from "../../../lib/auth-context";
+import { useLang } from "../../../lib/i18n";
 
 interface ChatMessage {
   id: string;
@@ -55,6 +56,7 @@ function MediaBubble({
   onDownload: (m: ChatMessage) => void;
   downloading: boolean;
 }) {
+  const { t } = useLang();
   if (!m.filePath) return null;
   // filePath is already the full Cloudinary URL.
   const url = m.filePath;
@@ -64,7 +66,7 @@ function MediaBubble({
       onClick={() => onDownload(m)}
       disabled={downloading}
       className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-white/80 text-navy-900 shadow-sm transition-colors hover:bg-white disabled:opacity-60"
-      title="Download"
+      title={t("Download")}
     >
       {downloading ? (
         <Loader2 size={13} className="animate-spin" />
@@ -123,6 +125,7 @@ function MediaBubble({
 }
 
 export default function ChatPage() {
+  const { t } = useLang();
   const { user } = useAuth();
   const myRegNo = (user as any)?.regNo;
 
@@ -268,13 +271,13 @@ export default function ChatPage() {
   return (
     <div className="flex h-[calc(100vh-180px)] flex-col">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Community
+        {t("Community")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Chat
+        {t("Chat")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Talk with your hostel mates, or with everyone across the hostels.
+        {t("Talk with your hostel mates, or with everyone across the hostels.")}
       </p>
 
       {/* Tabs */}
@@ -287,7 +290,7 @@ export default function ChatPage() {
               : "bg-white text-ink-light hover:bg-cream"
           }`}
         >
-          <Users size={15} /> My Hostel
+          <Users size={15} /> {t("My Hostel")}
         </button>
         <button
           onClick={() => setTab("all")}
@@ -297,7 +300,7 @@ export default function ChatPage() {
               : "bg-white text-ink-light hover:bg-cream"
           }`}
         >
-          <Globe2 size={15} /> All Hostels
+          <Globe2 size={15} /> {t("All Hostels")}
         </button>
       </div>
 
@@ -305,7 +308,7 @@ export default function ChatPage() {
       <div className="mt-4 flex flex-1 flex-col overflow-hidden rounded-card border border-line bg-white">
         {loading && (
           <div className="flex flex-1 items-center justify-center gap-2 text-sm text-ink-light">
-            <Loader2 size={16} className="animate-spin" /> Loading chat...
+            <Loader2 size={16} className="animate-spin" /> {t("Loading chat...")}
           </div>
         )}
 
@@ -320,13 +323,13 @@ export default function ChatPage() {
             <div ref={scrollRef} className="flex-1 space-y-2 overflow-y-auto p-4">
               {tab === "hostel" && hostelMessages.length === 0 ? (
                 <div className="flex h-full items-center justify-center text-center text-sm text-ink-light">
-                  No messages yet in your hostel group.
+                  {t("No messages yet in your hostel group.")}
                   <br />
-                  You need an active bed booking to join this chat.
+                  {t("You need an active bed booking to join this chat.")}
                 </div>
               ) : tab === "all" && allMessages.length === 0 ? (
                 <div className="flex h-full items-center justify-center text-sm text-ink-light">
-                  No messages yet. Say hello!
+                  {t("No messages yet. Say hello!")}
                 </div>
               ) : (
                 activeMessages.map((m) => {
@@ -423,7 +426,7 @@ export default function ChatPage() {
                 onClick={() => setShowEmoji((s) => !s)}
                 disabled={noHostelGroupYet}
                 className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-ink-light hover:bg-cream disabled:opacity-60"
-                title="Emoji"
+                title={t("Emoji")}
               >
                 <Smile size={18} />
               </button>
@@ -431,7 +434,7 @@ export default function ChatPage() {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={noHostelGroupYet}
                 className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-ink-light hover:bg-cream disabled:opacity-60"
-                title="Attach a file (up to 10MB)"
+                title={t("Attach a file (up to 10MB)")}
               >
                 <Paperclip size={18} />
               </button>

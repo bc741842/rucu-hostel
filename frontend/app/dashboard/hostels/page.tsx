@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface Hostel {
   id: string;
@@ -31,6 +32,7 @@ const itemVariants = {
 };
 
 export default function HostelsPage() {
+  const { t } = useLang();
   const [hostels, setHostels] = useState<Hostel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -124,13 +126,13 @@ export default function HostelsPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-            Manage
+            {t("Manage")}
           </p>
           <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-            Hostels
+            {t("Hostels")}
           </h2>
           <p className="mt-2 max-w-lg text-sm text-ink-light">
-            Add, edit, or remove hostels available for booking.
+            {t("Add, edit, or remove hostels available for booking.")}
           </p>
         </div>
         <motion.button
@@ -138,7 +140,7 @@ export default function HostelsPage() {
           onClick={openCreate}
           className="flex shrink-0 items-center gap-2 rounded-lg bg-navy-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-navy-700"
         >
-          <Plus size={16} /> Add Hostel
+          <Plus size={16} /> {t("Add Hostel")}
         </motion.button>
       </div>
 
@@ -236,7 +238,7 @@ export default function HostelsPage() {
               <div className="mt-4 space-y-4">
                 <div>
                   <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                    Name
+                    {t("Name")}
                   </label>
                   <input
                     value={form.name}
@@ -247,7 +249,7 @@ export default function HostelsPage() {
                 </div>
                 <div>
                   <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                    Gender Allowed
+                    {t("Gender Allowed")}
                   </label>
                   <select
                     value={form.genderAllowed}
@@ -256,13 +258,13 @@ export default function HostelsPage() {
                     }
                     className="w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink outline-none transition-colors focus:border-navy-900"
                   >
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="male">{t("Male")}</option>
+                    <option value="female">{t("Female")}</option>
                   </select>
                 </div>
                 <div>
                   <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wide text-ink">
-                    Location (optional)
+                    {t("Location (optional)")}
                   </label>
                   <input
                     value={form.location}
@@ -315,8 +317,7 @@ export default function HostelsPage() {
                 Delete &quot;{deleteTarget.name}&quot;?
               </h3>
               <p className="mt-2 text-sm text-ink-light">
-                This cannot be undone. Hostels with existing rooms cannot be
-                deleted.
+                {t("This cannot be undone. Hostels with existing rooms cannot be deleted.")}
               </p>
               {deleteError && (
                 <p className="mt-3 rounded-lg bg-danger-50 px-3 py-2 text-sm text-danger-600">
@@ -328,7 +329,7 @@ export default function HostelsPage() {
                   onClick={() => setDeleteTarget(null)}
                   className="flex-1 rounded-lg border border-line py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-cream"
                 >
-                  Cancel
+                  {t("Cancel")}
                 </button>
                 <motion.button
                   whileTap={{ scale: 0.97 }}

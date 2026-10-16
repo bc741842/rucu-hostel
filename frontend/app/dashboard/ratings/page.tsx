@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Star, Loader2, AlertCircle, CheckCircle2, Send } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface MyRating {
   rating: number;
@@ -14,6 +15,7 @@ interface MyRating {
 }
 
 export default function RatingsPage() {
+  const { t } = useLang();
   const [existing, setExisting] = useState<MyRating | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -73,13 +75,13 @@ export default function RatingsPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Feedback
+        {t("Feedback")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Rate Your Hostel
+        {t("Rate Your Hostel")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Tell us how your stay has been. You can update this anytime.
+        {t("Tell us how your stay has been. You can update this anytime.")}
       </p>
 
       <div className="mt-6 max-w-md">
@@ -133,7 +135,7 @@ export default function RatingsPage() {
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               rows={3}
-              placeholder="Anything you'd like to share? (optional)"
+              placeholder={t("Anything you'd like to share? (optional)")}
               className="mt-4 w-full resize-none rounded-lg border border-line bg-cream px-3 py-2.5 text-sm text-ink focus:border-navy-500 focus:outline-none"
             />
 
@@ -142,7 +144,7 @@ export default function RatingsPage() {
             )}
             {submitSuccess && (
               <p className="mt-3 flex items-center gap-1.5 text-xs text-success-600">
-                <CheckCircle2 size={13} /> Thank you for your feedback!
+                <CheckCircle2 size={13} /> {t("Thank you for your feedback!")}
               </p>
             )}
 

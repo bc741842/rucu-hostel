@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface Hostel {
   id: string;
@@ -60,6 +61,7 @@ const statusLabel: Record<string, string> = {
 };
 
 export default function WaitingListPage() {
+  const { t } = useLang();
   const [hostels, setHostels] = useState<Hostel[]>([]);
   const [academicYear, setAcademicYear] = useState<AcademicYear | null>(null);
   const [myEntries, setMyEntries] = useState<WaitingEntry[]>([]);
@@ -153,7 +155,7 @@ export default function WaitingListPage() {
         {academicYear ? academicYear.name : "Academic Year"}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Bed Waiting List
+        {t("Bed Waiting List")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
         If your preferred hostel has no free beds right now, join the waiting
@@ -173,7 +175,7 @@ export default function WaitingListPage() {
           {/* Join form */}
           <div className="mt-6 rounded-card border border-line bg-white p-5">
             <h3 className="font-display text-base font-semibold text-ink">
-              Join a Waiting List
+              {t("Join a Waiting List")}
             </h3>
             <div className="mt-3 flex flex-col gap-3 sm:flex-row">
               <select
@@ -201,7 +203,7 @@ export default function WaitingListPage() {
 
             {availableHostels.length === 0 && hostels.length > 0 && (
               <p className="mt-3 text-xs text-ink-light">
-                You are already on the waiting list for every available hostel.
+                {t("You are already on the waiting list for every available hostel.")}
               </p>
             )}
 
@@ -219,7 +221,7 @@ export default function WaitingListPage() {
 
           {/* My entries */}
           <h3 className="mt-8 font-display text-base font-semibold text-ink">
-            My Waiting List Entries
+            {t("My Waiting List Entries")}
           </h3>
 
           {myEntries.length === 0 ? (
@@ -283,7 +285,7 @@ export default function WaitingListPage() {
                     {entry.status === "notified" && (
                       <p className="mt-4 flex items-center gap-1.5 rounded-lg bg-navy-50 px-3 py-2 text-xs font-medium text-navy-700">
                         <Hourglass size={13} />
-                        A bed is becoming available — please check back soon.
+                        {t("A bed is becoming available — please check back soon.")}
                       </p>
                     )}
                   </motion.div>

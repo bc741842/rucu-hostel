@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface MaintenanceRequest {
   id: string;
@@ -38,6 +39,7 @@ const STATUS_ICONS: Record<string, any> = {
 };
 
 export default function MaintenancePage() {
+  const { t } = useLang();
   const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -97,13 +99,13 @@ export default function MaintenancePage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Support
+        {t("Support")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Maintenance Requests
+        {t("Maintenance Requests")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Report a problem with your room or any common area in your hostel.
+        {t("Report a problem with your room or any common area in your hostel.")}
       </p>
 
       {/* New request form */}
@@ -112,31 +114,31 @@ export default function MaintenancePage() {
         className="mt-6 max-w-xl rounded-card border border-line bg-white p-5"
       >
         <p className="flex items-center gap-1.5 text-sm font-semibold text-ink">
-          <Wrench size={15} /> Report a new issue
+          <Wrench size={15} /> {t("Report a new issue")}
         </p>
 
         <div className="mt-4 space-y-3">
           <div>
             <label className="text-xs font-medium text-ink-light">
-              Location
+              {t("Location")}
             </label>
             <input
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="e.g. My room (Room 12, Bed B) or 2nd floor common bathroom"
+              placeholder={t("e.g. My room (Room 12, Bed B) or 2nd floor common bathroom")}
               className="mt-1 w-full rounded-lg border border-line bg-cream px-3 py-2.5 text-sm text-ink focus:border-navy-500 focus:outline-none"
             />
           </div>
           <div>
             <label className="text-xs font-medium text-ink-light">
-              Describe the problem
+              {t("Describe the problem")}
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              placeholder="What's wrong and since when?"
+              placeholder={t("What's wrong and since when?")}
               className="mt-1 w-full resize-none rounded-lg border border-line bg-cream px-3 py-2.5 text-sm text-ink focus:border-navy-500 focus:outline-none"
             />
           </div>
@@ -147,7 +149,7 @@ export default function MaintenancePage() {
         )}
         {submitSuccess && (
           <p className="mt-3 flex items-center gap-1.5 text-xs text-success-600">
-            <CheckCircle2 size={13} /> Report submitted.
+            <CheckCircle2 size={13} /> {t("Report submitted.")}
           </p>
         )}
 
@@ -167,7 +169,7 @@ export default function MaintenancePage() {
 
       {/* My requests list */}
       <div className="mt-8 max-w-xl">
-        <p className="text-sm font-semibold text-ink">My reports</p>
+        <p className="text-sm font-semibold text-ink">{t("My reports")}</p>
 
         {loading && <LoadingBlock />}
 
@@ -179,7 +181,7 @@ export default function MaintenancePage() {
 
         {!loading && !error && requests.length === 0 && (
           <div className="mt-3 rounded-card border border-line bg-white p-6 text-center text-sm text-ink-light">
-            You haven't reported anything yet.
+            {t("You haven't reported anything yet.")}
           </div>
         )}
 

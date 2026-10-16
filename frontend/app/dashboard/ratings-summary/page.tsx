@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Star, AlertCircle, MessageSquare } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface Hostel {
   id: string;
@@ -28,6 +29,7 @@ interface RatingRow {
 }
 
 export default function RatingsSummaryPage() {
+  const { t } = useLang();
   const [hostels, setHostels] = useState<Hostel[]>([]);
   const [hostelFilter, setHostelFilter] = useState("");
 
@@ -64,13 +66,13 @@ export default function RatingsSummaryPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Feedback
+        {t("Feedback")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Hostel Ratings
+        {t("Hostel Ratings")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        What students think of their hostels.
+        {t("What students think of their hostels.")}
       </p>
 
       <div className="mt-5">
@@ -79,7 +81,7 @@ export default function RatingsSummaryPage() {
           onChange={(e) => setHostelFilter(e.target.value)}
           className="rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink focus:border-navy-500 focus:outline-none"
         >
-          <option value="">All hostels</option>
+          <option value="">{t("All hostels")}</option>
           {hostels.map((h) => (
             <option key={h.id} value={h.id}>
               {h.name}
@@ -102,7 +104,7 @@ export default function RatingsSummaryPage() {
           <div className="grid gap-3 sm:grid-cols-2">
             {summary.length === 0 ? (
               <p className="text-sm text-ink-light">
-                No ratings submitted yet.
+                {t("No ratings submitted yet.")}
               </p>
             ) : (
               summary.map((s, i) => (
@@ -145,11 +147,11 @@ export default function RatingsSummaryPage() {
           {/* Recent comments */}
           <div>
             <p className="flex items-center gap-1.5 text-sm font-semibold text-ink">
-              <MessageSquare size={15} /> Recent feedback
+              <MessageSquare size={15} /> {t("Recent feedback")}
             </p>
             {ratings.filter((r) => r.comment).length === 0 ? (
               <p className="mt-3 text-sm text-ink-light">
-                No written feedback yet.
+                {t("No written feedback yet.")}
               </p>
             ) : (
               <div className="mt-3 space-y-2">

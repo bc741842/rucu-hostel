@@ -13,6 +13,7 @@ import {
   Download,
 } from "lucide-react";
 import { api } from "../../../lib/api";
+import { useLang } from "../../../lib/i18n";
 
 interface Hostel {
   id: string;
@@ -47,6 +48,7 @@ function MediaPreview({
   onDownload: (m: ChatMessage) => void;
   downloading: boolean;
 }) {
+  const { t } = useLang();
   if (!m.filePath) return null;
   // filePath is already the full Cloudinary URL.
   const url = m.filePath;
@@ -56,7 +58,7 @@ function MediaPreview({
       onClick={() => onDownload(m)}
       disabled={downloading}
       className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-white/80 text-navy-900 shadow-sm transition-colors hover:bg-white disabled:opacity-60"
-      title="Download"
+      title={t("Download")}
     >
       {downloading ? (
         <Loader2 size={13} className="animate-spin" />
@@ -115,6 +117,7 @@ function MediaPreview({
 }
 
 export default function ChatManagePage() {
+  const { t } = useLang();
   const [hostels, setHostels] = useState<Hostel[]>([]);
   const [selectedHostelId, setSelectedHostelId] = useState(""); // "" = All Hostels
 
@@ -207,14 +210,13 @@ export default function ChatManagePage() {
   return (
     <div className="flex h-[calc(100vh-180px)] flex-col">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Community
+        {t("Community")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Monitor Chat
+        {t("Monitor Chat")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Read-only view of hostel group chats, including shared photos, audio,
-        video and other files. Remove any message that breaks the rules.
+        {t("Read-only view of hostel group chats, including shared photos, audio, video and other files. Remove any message that breaks the rules.")}
       </p>
 
       <div className="mt-5 flex items-center gap-3">
@@ -223,7 +225,7 @@ export default function ChatManagePage() {
           onChange={(e) => setSelectedHostelId(e.target.value)}
           className="rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink focus:border-navy-500 focus:outline-none"
         >
-          <option value="">All Hostels (global group)</option>
+          <option value="">{t("All Hostels (global group)")}</option>
           {hostels.map((h) => (
             <option key={h.id} value={h.id}>
               {h.name}
@@ -239,7 +241,7 @@ export default function ChatManagePage() {
       <div className="mt-4 flex flex-1 flex-col overflow-hidden rounded-card border border-line bg-white">
         {loading && (
           <div className="flex flex-1 items-center justify-center gap-2 text-sm text-ink-light">
-            <Loader2 size={16} className="animate-spin" /> Loading chat...
+            <Loader2 size={16} className="animate-spin" /> {t("Loading chat...")}
           </div>
         )}
 
@@ -253,7 +255,7 @@ export default function ChatManagePage() {
           <div ref={scrollRef} className="flex-1 space-y-2 overflow-y-auto p-4">
             {messages.length === 0 ? (
               <div className="flex h-full items-center justify-center text-sm text-ink-light">
-                No messages in this group yet.
+                {t("No messages in this group yet.")}
               </div>
             ) : (
               messages.map((m) => (
@@ -287,7 +289,7 @@ export default function ChatManagePage() {
                     onClick={() => deleteMessage(m.id)}
                     disabled={deletingId === m.id}
                     className="flex-shrink-0 rounded-lg p-1.5 text-ink-light opacity-0 transition-colors hover:bg-danger-50 hover:text-danger-600 group-hover:opacity-100 disabled:opacity-60"
-                    title="Delete message"
+                    title={t("Delete message")}
                   >
                     {deletingId === m.id ? (
                       <Loader2 size={14} className="animate-spin" />

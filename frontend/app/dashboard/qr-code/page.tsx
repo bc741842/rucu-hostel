@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface MyQrCode {
   qrCode: string;
@@ -23,6 +24,7 @@ interface MyQrCode {
 }
 
 export default function QrCodePage() {
+  const { t } = useLang();
   const [data, setData] = useState<MyQrCode | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -52,13 +54,13 @@ export default function QrCodePage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Check-in
+        {t("Check-in")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        My Check-in QR Code
+        {t("My Check-in QR Code")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Show this code to the warden or admin at the hostel gate to check in.
+        {t("Show this code to the warden or admin at the hostel gate to check in.")}
       </p>
 
       <div className="mt-6 max-w-sm">
@@ -80,7 +82,7 @@ export default function QrCodePage() {
               <div className="flex flex-col items-center gap-3 py-6">
                 <CheckCircle2 size={40} className="text-success-600" />
                 <p className="font-display text-lg font-semibold text-ink">
-                  You're already checked in
+                  {t("You're already checked in")}
                 </p>
                 {data.checkedInAt && (
                   <p className="text-xs text-ink-light">
@@ -92,7 +94,7 @@ export default function QrCodePage() {
             ) : (
               <>
                 <div className="flex items-center justify-center gap-1.5 text-xs font-medium text-gold-700">
-                  <QrCodeIcon size={13} /> Scan at the hostel gate
+                  <QrCodeIcon size={13} /> {t("Scan at the hostel gate")}
                 </div>
                 <div className="mt-4 flex items-center justify-center rounded-lg bg-white p-4">
                   <QRCodeSVG value={data.qrCode} size={220} />

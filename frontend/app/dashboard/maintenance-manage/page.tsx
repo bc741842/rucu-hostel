@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface Hostel {
   id: string;
@@ -49,6 +50,7 @@ const NEXT_LABEL: Record<string, string> = {
 };
 
 export default function MaintenanceManagePage() {
+  const { t } = useLang();
   const [hostels, setHostels] = useState<Hostel[]>([]);
   const [hostelFilter, setHostelFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -109,13 +111,13 @@ export default function MaintenanceManagePage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Hostel Operations
+        {t("Hostel Operations")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Manage Maintenance Requests
+        {t("Manage Maintenance Requests")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Track and resolve issues reported by students.
+        {t("Track and resolve issues reported by students.")}
       </p>
 
       <div className="mt-5 flex flex-wrap gap-3">
@@ -124,7 +126,7 @@ export default function MaintenanceManagePage() {
           onChange={(e) => setHostelFilter(e.target.value)}
           className="rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink focus:border-navy-500 focus:outline-none"
         >
-          <option value="">All hostels</option>
+          <option value="">{t("All hostels")}</option>
           {hostels.map((h) => (
             <option key={h.id} value={h.id}>
               {h.name}
@@ -137,10 +139,10 @@ export default function MaintenanceManagePage() {
           onChange={(e) => setStatusFilter(e.target.value)}
           className="rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink focus:border-navy-500 focus:outline-none"
         >
-          <option value="">All statuses</option>
-          <option value="Open">Open</option>
-          <option value="InProgress">In Progress</option>
-          <option value="Resolved">Resolved</option>
+          <option value="">{t("All statuses")}</option>
+          <option value="Open">{t("Open")}</option>
+          <option value="InProgress">{t("In Progress")}</option>
+          <option value="Resolved">{t("Resolved")}</option>
         </select>
       </div>
 
@@ -155,7 +157,7 @@ export default function MaintenanceManagePage() {
 
         {!loading && !error && requests.length === 0 && (
           <div className="rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
-            No maintenance requests match this filter.
+            {t("No maintenance requests match this filter.")}
           </div>
         )}
 
@@ -211,7 +213,7 @@ export default function MaintenanceManagePage() {
                           [r.id]: e.target.value,
                         }))
                       }
-                      placeholder="Optional note for the student (e.g. what was fixed)"
+                      placeholder={t("Optional note for the student (e.g. what was fixed)")}
                       className="mt-3 w-full rounded-lg border border-line bg-cream px-3 py-2 text-xs text-ink focus:border-navy-500 focus:outline-none"
                     />
                   )}

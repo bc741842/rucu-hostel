@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface Roommate {
   bed: string;
@@ -33,6 +34,7 @@ interface RoommatesData {
 }
 
 export default function RoommatesPage() {
+  const { t } = useLang();
   const [data, setData] = useState<RoommatesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -60,13 +62,13 @@ export default function RoommatesPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        My Hostel
+        {t("My Hostel")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        My Roommates
+        {t("My Roommates")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Students who share your room for this academic year.
+        {t("Students who share your room for this academic year.")}
       </p>
 
       <div className="mt-6 max-w-2xl">
@@ -95,7 +97,7 @@ export default function RoommatesPage() {
 
             {data.roommates.length === 0 ? (
               <div className="mt-4 rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
-                No one else has booked into your room yet.
+                {t("No one else has booked into your room yet.")}
               </div>
             ) : (
               <div className="mt-4 grid gap-3 sm:grid-cols-2">

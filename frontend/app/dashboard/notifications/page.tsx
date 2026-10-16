@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Bell, CheckCheck } from "lucide-react";
 import { api } from "@/lib/api";
+import { useLang } from "../../../lib/i18n";
 
 interface NotificationItem {
   id: string;
@@ -26,6 +27,7 @@ function formatDate(dateString: string): string {
 }
 
 export default function NotificationsPage() {
+  const { t } = useLang();
   const router = useRouter();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -78,7 +80,7 @@ export default function NotificationsPage() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Bell className="w-6 h-6 text-navy-900" />
-          <h1 className="text-xl font-semibold text-ink">Notifications</h1>
+          <h1 className="text-xl font-semibold text-ink">{t("Notifications")}</h1>
         </div>
         {unreadCount > 0 && (
           <button
@@ -86,16 +88,16 @@ export default function NotificationsPage() {
             className="flex items-center gap-1.5 text-sm text-gold-700 hover:text-gold-500 font-medium"
           >
             <CheckCheck className="w-4 h-4" />
-            Mark all as read
+            {t("Mark all as read")}
           </button>
         )}
       </div>
 
       {loading ? (
-        <div className="text-center text-ink-light py-12">Loading...</div>
+        <div className="text-center text-ink-light py-12">{t("Loading...")}</div>
       ) : notifications.length === 0 ? (
         <div className="text-center text-ink-light py-12 border border-line rounded-card bg-white">
-          No notifications yet
+          {t("No notifications yet")}
         </div>
       ) : (
         <div className="space-y-2">

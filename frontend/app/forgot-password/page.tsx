@@ -12,10 +12,12 @@ import {
   EyeOff,
 } from "lucide-react";
 import { api } from "../../lib/api";
+import { useLang } from "../../lib/i18n";
 
 type Step = "request" | "verify" | "reset" | "done";
 
 export default function ForgotPasswordPage() {
+  const { t } = useLang();
   const [step, setStep] = useState<Step>("request");
   const [regNo, setRegNo] = useState("");
   const [otpSession, setOtpSession] = useState("");
@@ -98,10 +100,10 @@ export default function ForgotPasswordPage() {
           </div>
           <div className="leading-tight">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-navy-100/70">
-              Ruaha Catholic University
+              {t("Ruaha Catholic University")}
             </p>
             <p className="font-display text-lg font-semibold text-white">
-              Hostel Booking System
+              {t("Hostel Booking System")}
             </p>
           </div>
         </div>
@@ -110,10 +112,10 @@ export default function ForgotPasswordPage() {
 
       <main className="mx-auto flex max-w-5xl flex-col items-center px-4 pb-20 pt-16">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-navy-700">
-          RUCU Hostel Portal
+          {t("RUCU Hostel Portal")}
         </p>
         <h1 className="mt-2 text-center font-display text-4xl font-semibold text-ink">
-          Reset your password
+          {t("Reset your password")}
         </h1>
         <p className="mt-3 max-w-sm text-center text-sm text-ink-light">
           {stepTitles[step]}
@@ -131,7 +133,7 @@ export default function ForgotPasswordPage() {
                 className="space-y-5"
               >
                 <Field
-                  label="Registration Number (RegNo)"
+                  label={t("Registration Number (RegNo)")}
                   icon={IdCard}
                   value={regNo}
                   onChange={setRegNo}
@@ -163,7 +165,7 @@ export default function ForgotPasswordPage() {
                 className="space-y-5"
               >
                 <Field
-                  label="6-digit OTP"
+                  label={t("6-digit OTP")}
                   icon={KeyRound}
                   value={otp}
                   onChange={setOtp}
@@ -187,7 +189,7 @@ export default function ForgotPasswordPage() {
                   onClick={() => setStep("request")}
                   className="w-full text-center text-xs font-medium text-ink-light hover:text-navy-900"
                 >
-                  Use a different Reg. No.
+                  {t("Use a different Reg. No.")}
                 </button>
               </motion.form>
             )}
@@ -202,7 +204,7 @@ export default function ForgotPasswordPage() {
                 className="space-y-5"
               >
                 <Field
-                  label="New Password"
+                  label={t("New Password")}
                   icon={Lock}
                   value={newPassword}
                   onChange={setNewPassword}
@@ -210,7 +212,7 @@ export default function ForgotPasswordPage() {
                   type="password"
                 />
                 <Field
-                  label="Confirm New Password"
+                  label={t("Confirm New Password")}
                   icon={Lock}
                   value={confirmPassword}
                   onChange={setConfirmPassword}
@@ -248,7 +250,7 @@ export default function ForgotPasswordPage() {
                   <CheckCircle2 size={44} className="text-success-600" />
                 </motion.div>
                 <p className="mt-4 text-sm text-ink-light">
-                  Your password has been changed successfully.
+                  {t("Your password has been changed successfully.")}
                 </p>
                 <a
                   href="/login"
@@ -265,7 +267,7 @@ export default function ForgotPasswordPage() {
               <p className="text-ink-light">
                 Remembered your password?{" "}
                 <a href="/login" className="font-medium text-navy-900 hover:underline">
-                  Log in
+                  {t("Log in")}
                 </a>
               </p>
             </div>

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useLang } from "../../../lib/i18n";
 
 interface Hostel {
   id: string;
@@ -44,6 +45,7 @@ const itemVariants = {
 };
 
 export default function WaitingQueuePage() {
+  const { t } = useLang();
   const [hostels, setHostels] = useState<Hostel[]>([]);
   const [entries, setEntries] = useState<QueueEntry[]>([]);
   const [selectedHostelId, setSelectedHostelId] = useState("");
@@ -100,14 +102,13 @@ export default function WaitingQueuePage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Hostel Operations
+        {t("Hostel Operations")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Bed Waiting Queue
+        {t("Bed Waiting Queue")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        A FIFO list of students waiting for a bed, by hostel. Contact them
-        in this order as beds become available.
+        {t("A FIFO list of students waiting for a bed, by hostel. Contact them in this order as beds become available.")}
       </p>
 
       <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -116,7 +117,7 @@ export default function WaitingQueuePage() {
           onChange={(e) => setSelectedHostelId(e.target.value)}
           className="rounded-lg border border-line bg-white px-3 py-2.5 text-sm text-ink focus:border-navy-500 focus:outline-none"
         >
-          <option value="">All Hostels</option>
+          <option value="">{t("All Hostels")}</option>
           {hostels.map((h) => (
             <option key={h.id} value={h.id}>
               {h.name}
@@ -138,7 +139,7 @@ export default function WaitingQueuePage() {
 
       {!loading && !error && entries.length === 0 && (
         <div className="mt-8 rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
-          No students are currently waiting.
+          {t("No students are currently waiting.")}
         </div>
       )}
 

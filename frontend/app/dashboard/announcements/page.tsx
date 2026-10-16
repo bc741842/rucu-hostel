@@ -13,6 +13,7 @@ import {
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
 import { useToast } from "../../../components/ui/Toast";
+import { useLang } from "../../../lib/i18n";
 
 interface Announcement {
   id: string;
@@ -42,6 +43,7 @@ function formatSize(bytes: number): string {
 }
 
 export default function AnnouncementsPage() {
+  const { t } = useLang();
   const toast = useToast();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
@@ -93,13 +95,13 @@ export default function AnnouncementsPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        RUCU Hostel
+        {t("RUCU Hostel")}
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
-        Announcements
+        {t("Announcements")}
       </h2>
       <p className="mt-2 max-w-lg text-sm text-ink-light">
-        Important updates and notices from the hostel administration.
+        {t("Important updates and notices from the hostel administration.")}
       </p>
 
       {loading && <LoadingBlock />}
@@ -112,7 +114,7 @@ export default function AnnouncementsPage() {
 
       {!loading && !error && announcements.length === 0 && (
         <div className="mt-8 rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
-          There are no announcements right now.
+          {t("There are no announcements right now.")}
         </div>
       )}
 
@@ -151,7 +153,7 @@ export default function AnnouncementsPage() {
                     </>
                   ) : (
                     <>
-                      <Globe size={12} /> All Hostels
+                      <Globe size={12} /> {t("All Hostels")}
                     </>
                   )}
                 </span>
