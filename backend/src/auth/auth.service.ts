@@ -132,7 +132,9 @@ export class AuthService {
     );
 
     if (student?.email) {
-      await this.emailService.sendMail(
+      // Not awaited: the response must not depend on (or reveal the speed of)
+      // the mail server. sendMail never throws.
+      void this.emailService.sendMail(
         student.email,
         'Your RUCU Hostel password reset code',
         `Hi ${student.name},\n\nYour one-time password (OTP) reset code is: ${otp}\n\nThis code expires in 10 minutes. If you did not request this, ignore this email.`,

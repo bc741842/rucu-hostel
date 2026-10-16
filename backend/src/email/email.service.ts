@@ -9,6 +9,10 @@ export class EmailService {
   constructor() {
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
+      // Fail fast instead of hanging for minutes when the host blocks SMTP.
+      connectionTimeout: 8000,
+      greetingTimeout: 8000,
+      socketTimeout: 10000,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -28,6 +32,39 @@ export class EmailService {
   async sendMail(to: string, subject: string, text: string, html?: string) {
     if (!to) return;
  
+    // Preferred path: Brevo's HTTPS API. Many hosts (including Railway's
+    // free/trial plans) block outbound SMTP, but HTTPS always works.
+    if (process.env.BREVO_API_KEY) {
+      const senderEmail = process.env.EMAIL_FROM || process.env.EMAIL_USER;
+      try {
+        const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: {
+            'api-key': process.env.BREVO_API_KEY,
+            'content-type': 'application/json',
+            accept: 'application/json',
+          },
+          body: JSON.stringify({
+            sender: { name: 'RUCU Hostel Booking', email: senderEmail },
+            to: [{ email: to }],
+            subject,
+            textContent: text,
+            htmlContent: html ?? this.buildLetterheadHtml(subject, text),
+          }),
+          signal: AbortSignal.timeout(10000),
+        });
+        if (!res.ok) {
+          this.logger.error(
+            `Brevo rejected email to ${to}: ${res.status} ${await res.text()}`,
+          );
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        this.logger.error(`Failed to send email to ${to}: ${message}`);
+      }
+      return;
+    }
+
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
       this.logger.warn(
         'EMAIL_USER / EMAIL_PASS not set in .env — skipping email send.',
