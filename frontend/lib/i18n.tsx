@@ -459,6 +459,32 @@ const SW: Record<string, string> = {
     "Tumia hali ya giza",
   "Switch to light mode":
     "Tumia hali ya mwanga",
+  "Unread Notifications":
+    "Arifa Ambazo Hazijasomwa",
+  "Open Maintenance Requests":
+    "Maombi ya Matengenezo Yaliyo Wazi",
+  "Latest Announcements":
+    "Matangazo ya Hivi Karibuni",
+  "View all":
+    "Tazama yote",
+  "Could not load your overview. Please try again.":
+    "Imeshindwa kupakia muhtasari. Tafadhali jaribu tena.",
+  "payments waiting to be confirmed":
+    "malipo yanasubiri kuthibitishwa",
+  "open maintenance requests":
+    "maombi ya matengenezo yaliyo wazi",
+  "students paid but not checked in":
+    "wanafunzi wamelipa lakini hawajaingia",
+  "students on the waiting list":
+    "wanafunzi kwenye orodha ya kusubiri",
+  "No academic year is set up, so students cannot book yet.":
+    "Hakuna mwaka wa masomo uliowekwa, kwa hiyo wanafunzi hawawezi kuhifadhi bado.",
+  "Needs your attention":
+    "Inahitaji hatua yako",
+  "Total Beds":
+    "Vitanda Vyote",
+  "Free Beds":
+    "Vitanda Vilivyo Wazi",
 };
 
 interface LangContextValue {
