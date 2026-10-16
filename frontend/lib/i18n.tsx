@@ -485,6 +485,9 @@ const SW: Record<string, string> = {
     "Vitanda Vyote",
   "Free Beds":
     "Vitanda Vilivyo Wazi",
+  "If the camera cannot scan, give the warden this code:":
+    "Kamera ikishindwa kuscan, mpe warden code hii:",
+  "Copy code": "Nakili code",
 };
 
 interface LangContextValue {

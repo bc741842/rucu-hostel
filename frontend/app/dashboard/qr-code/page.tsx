@@ -99,6 +99,18 @@ export default function QrCodePage() {
                 <div className="mt-4 flex items-center justify-center rounded-lg bg-white p-4 keep-white">
                   <QRCodeSVG value={data.qrCode} size={220} />
                 </div>
+                <p className="mt-4 text-xs text-ink-light">
+                  {t("If the camera cannot scan, give the warden this code:")}
+                </p>
+                <p className="mt-1 break-all rounded-lg bg-cream px-3 py-2 font-mono text-xs text-ink select-all">
+                  {data.qrCode}
+                </p>
+                <button
+                  onClick={() => navigator.clipboard?.writeText(data.qrCode)}
+                  className="mt-2 text-xs font-semibold text-navy-700 hover:underline"
+                >
+                  {t("Copy code")}
+                </button>
               </>
             )}
 
