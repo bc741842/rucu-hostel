@@ -41,7 +41,7 @@ export default function DashboardGroupLayout({
   if (loading || !user || forbidden) {
     return (
       <div className="flex h-screen items-center justify-center bg-cream">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-maroon-700 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-navy-900 border-t-transparent" />
       </div>
     );
   }
