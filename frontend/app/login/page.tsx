@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Lock, IdCard, Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../lib/auth-context";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
+import ThemeToggle from "../../components/ThemeToggle";
 import { useLang } from "../../lib/i18n";
 
 export default function LoginPage() {
@@ -47,8 +48,9 @@ export default function LoginPage() {
               {t("Hostel Booking System")}
             </p>
           </div>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-3">
             <LanguageSwitcher onDark />
+            <ThemeToggle onDark />
           </div>
         </div>
       </header>

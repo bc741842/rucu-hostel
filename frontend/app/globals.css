@@ -80,6 +80,56 @@
   }
 }
  
+/* ---------- Dark mode ----------
+   Toggled by adding the "dark" class to <html> (see ThemeToggle). Colour
+   tokens are remapped here so every existing page follows automatically. */
+.dark {
+  color-scheme: dark;
+  --color-navy-900: #2b4a80;
+  --color-navy-700: #8ea6d6;
+  --color-navy-500: #5f7fb8;
+  --color-navy-100: #26385a;
+  --color-navy-50: #1c2c4a;
+
+  --color-gold-300: #e6c878;
+  --color-gold-500: #d4a72c;
+  --color-gold-700: #e0b84a;
+
+  --color-cream: #0c1424;
+  --color-cream-100: #1b2943;
+  --color-ink: #e8edf7;
+  --color-ink-light: #9fb0cc;
+  --color-line: #2a3a5c;
+
+  --color-success-50: #11301f;
+  --color-success-600: #6fcf97;
+  --color-warning-50: #3a2a10;
+  --color-warning-600: #e8b04a;
+  --color-danger-50: #3a1818;
+  --color-danger-600: #f08a8a;
+}
+
+.dark .bg-white:not(.keep-white) {
+  background-color: #131f36;
+}
+.dark .text-navy-900 {
+  color: var(--color-ink);
+}
+.dark .hover\:bg-navy-700:hover {
+  background-color: #3b609f;
+}
+.dark .hover\:text-navy-900:hover {
+  color: var(--color-ink);
+}
+.dark header.bg-navy-900,
+.dark aside.bg-navy-900 {
+  background-color: #091020;
+}
+.dark ::selection {
+  background-color: var(--color-gold-500);
+  color: #0c1424;
+}
+
 @media print {
   * {
     -webkit-print-color-adjust: exact;

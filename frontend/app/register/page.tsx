@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../lib/auth-context";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
+import ThemeToggle from "../../components/ThemeToggle";
 import { useLang } from "../../lib/i18n";
 
 export default function RegisterPage() {
@@ -80,8 +81,9 @@ export default function RegisterPage() {
               {t("Hostel Booking System")}
             </p>
           </div>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-3">
             <LanguageSwitcher onDark />
+            <ThemeToggle onDark />
           </div>
         </div>
       </header>

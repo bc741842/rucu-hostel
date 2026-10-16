@@ -455,6 +455,10 @@ const SW: Record<string, string> = {
     "Kimeshachukuliwa",
   "Unavailable":
     "Hakipatikani",
+  "Switch to dark mode":
+    "Tumia hali ya giza",
+  "Switch to light mode":
+    "Tumia hali ya mwanga",
 };
 
 interface LangContextValue {

@@ -96,7 +96,7 @@ export default function QrCodePage() {
                 <div className="flex items-center justify-center gap-1.5 text-xs font-medium text-gold-700">
                   <QrCodeIcon size={13} /> {t("Scan at the hostel gate")}
                 </div>
-                <div className="mt-4 flex items-center justify-center rounded-lg bg-white p-4">
+                <div className="mt-4 flex items-center justify-center rounded-lg bg-white p-4 keep-white">
                   <QRCodeSVG value={data.qrCode} size={220} />
                 </div>
               </>

@@ -7,6 +7,7 @@ import NotificationBell from "../NotificationBell";
 import { useAuth } from "../../lib/auth-context";
 import { useLang } from "../../lib/i18n";
 import LanguageSwitcher from "../LanguageSwitcher";
+import ThemeToggle from "../ThemeToggle";
 
 export default function Topbar({
   onMobileMenuToggle,
@@ -47,6 +48,7 @@ export default function Topbar({
       </div>
       <div className="flex items-center gap-3 sm:gap-4">
         <LanguageSwitcher onDark />
+        <ThemeToggle onDark />
         <p className="hidden max-w-[16rem] truncate text-sm capitalize text-white/60 sm:block">
           {who}
         </p>
