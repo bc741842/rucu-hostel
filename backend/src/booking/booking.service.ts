@@ -6,7 +6,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { randomUUID } from 'crypto';
+import { randomInt, randomUUID } from 'crypto';
 import { BookingStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
@@ -205,9 +205,10 @@ export class BookingService {
         },
       });
 
-      const paymentsCount = await tx.payment.count();
+      // Random (not count()+1): two concurrent bookings would otherwise read
+      // the same count and collide on the unique control number.
       const yearTag = academicYear.name.replace('/', '');
-      const sequence = String(paymentsCount + 1).padStart(6, '0');
+      const sequence = String(randomInt(0, 1000000)).padStart(6, '0');
       const controlNumber = `RUCU-${yearTag}-${sequence}`;
  
       await tx.payment.create({

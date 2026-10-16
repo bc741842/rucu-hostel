@@ -22,7 +22,7 @@ api.interceptors.response.use(
       const publicPaths = ["/login", "/register", "/forgot-password"];
       if (!publicPaths.includes(window.location.pathname)) {
         Cookies.remove("rucu_token");
-        Cookies.remove("rucu_user_type");
+        Cookies.remove("rucu_user");
         window.location.href = "/login";
       }
     }
