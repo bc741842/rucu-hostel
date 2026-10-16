@@ -14,6 +14,7 @@ interface SidebarProps {
   onNavigate?: () => void;
   showToggle?: boolean;
   className?: string;
+  width?: number;
 }
 
 export default function Sidebar({
@@ -22,6 +23,7 @@ export default function Sidebar({
   onNavigate,
   showToggle = true,
   className = "",
+  width,
 }: SidebarProps) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
@@ -38,7 +40,8 @@ export default function Sidebar({
 
   return (
     <motion.aside
-      animate={{ width: collapsed ? 72 : 224 }}
+      initial={false}
+      animate={{ width: width ?? (collapsed ? 72 : 224) }}
       transition={{ type: "spring", stiffness: 260, damping: 28 }}
       className={`flex h-full flex-col bg-navy-900 shrink-0 overflow-hidden ${className}`}
     >
