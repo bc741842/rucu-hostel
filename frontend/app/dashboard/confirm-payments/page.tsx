@@ -148,7 +148,7 @@ export default function ConfirmPaymentsPage() {
       )}
 
       {!loading && !error && table.filtered.length > 0 && (
-        <div className="mt-4 overflow-hidden rounded-card border border-line bg-white">
+        <div className="mt-4 hidden overflow-hidden rounded-card border border-line bg-white sm:block">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-line bg-cream">
@@ -183,9 +183,9 @@ export default function ConfirmPaymentsPage() {
                     </div>
                   </td>
                   <td className="px-5 py-3 text-ink-light">
-                    {payment.booking.bed.room.hostel.name} · Room{" "}
-                    {payment.booking.bed.room.number} · Bed{" "}
-                    {payment.booking.bed.number}
+                    {payment.booking.bed.room.hostel.name} ·{" "}
+                    {withLabel("Room", payment.booking.bed.room.number)} ·{" "}
+                    {withLabel("Bed", payment.booking.bed.number)}
                   </td>
                   <td className="px-5 py-3 font-semibold text-navy-900">
                     TZS {Number(payment.amount).toLocaleString()}
@@ -203,6 +203,47 @@ export default function ConfirmPaymentsPage() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {!loading && !error && table.filtered.length > 0 && (
+        <div className="mt-4 space-y-3 sm:hidden">
+          {table.pageRows.map((payment) => (
+            <div
+              key={payment.id}
+              className="rounded-card border border-line bg-white p-4"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="break-all font-semibold text-ink">
+                    {payment.controlNumber}
+                  </p>
+                  <p className="mt-1 flex items-center gap-1.5 text-sm text-ink">
+                    <User size={13} className="shrink-0 text-ink-light" />
+                    <span>
+                      {payment.booking.student.name} (
+                      {payment.booking.student.regNo})
+                    </span>
+                  </p>
+                </div>
+                <p className="shrink-0 text-right font-semibold text-navy-900">
+                  TZS {Number(payment.amount).toLocaleString()}
+                </p>
+              </div>
+              <p className="mt-2 text-sm text-ink-light">
+                {payment.booking.bed.room.hostel.name} ·{" "}
+                {withLabel("Room", payment.booking.bed.room.number)} ·{" "}
+                {withLabel("Bed", payment.booking.bed.number)}
+              </p>
+              <button
+                onClick={() => setConfirmTarget(payment)}
+                className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-navy-900 px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-navy-700"
+              >
+                <BadgeCheck size={14} />
+                {t("Confirm")}
+              </button>
+            </div>
+          ))}
         </div>
       )}
 
@@ -312,4 +353,9 @@ function Row({
       </span>
     </div>
   );
+}
+
+/** "Room" + "No.1" -> "Room No.1", but avoids "Bed Bed No. 2" when the number already says it. */
+function withLabel(label: string, n: string) {
+  return new RegExp("^\\s*" + label, "i").test(n) ? n : `${label} ${n}`;
 }

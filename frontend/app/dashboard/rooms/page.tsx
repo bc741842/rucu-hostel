@@ -225,7 +225,7 @@ export default function RoomsPage() {
       )}
 
       {!loading && !error && table.filtered.length > 0 && (
-        <div className="mt-4 overflow-hidden rounded-card border border-line bg-white">
+        <div className="mt-4 hidden overflow-hidden rounded-card border border-line bg-white sm:block">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-line bg-cream">
@@ -267,6 +267,52 @@ export default function RoomsPage() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {!loading && !error && table.filtered.length > 0 && (
+        <div className="mt-4 space-y-3 sm:hidden">
+          {table.pageRows.map((room) => (
+            <div
+              key={room.id}
+              className="rounded-card border border-line bg-white p-4"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-display text-base font-semibold text-ink">
+                    {room.number}
+                  </p>
+                  <p className="text-sm text-ink-light">
+                    {room.hostel.name} · {t("Floor")} {room.floor ?? "-"}
+                  </p>
+                </div>
+                <p className="shrink-0 text-right font-semibold text-navy-900">
+                  TZS {Number(room.price).toLocaleString()}
+                </p>
+              </div>
+              <div className="mt-3 flex items-center justify-between">
+                <span className="text-xs text-ink-light">
+                  {room.beds.length} {t("Beds")}
+                </span>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => openEdit(room)}
+                    aria-label="Edit"
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-ink-light transition-colors hover:bg-navy-50 hover:text-navy-900"
+                  >
+                    <Pencil size={15} />
+                  </button>
+                  <button
+                    onClick={() => setDeleteTarget(room)}
+                    aria-label="Delete"
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-ink-light transition-colors hover:bg-danger-50 hover:text-danger-600"
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
