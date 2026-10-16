@@ -87,9 +87,11 @@ export default function BookBedPage() {
         api.get("/academic-years"),
       ]);
       setBeds(bedsRes.data);
-      if (yearsRes.data?.length > 0) {
-        setAcademicYear(yearsRes.data[0]);
-      }
+      const years = yearsRes.data ?? [];
+      const current =
+        years.find((y: AcademicYear & { status?: string }) => y.status === "active") ??
+        years[0];
+      if (current) setAcademicYear(current);
     } catch (err: any) {
       setError(
         err?.response?.data?.message ||
@@ -122,7 +124,13 @@ export default function BookBedPage() {
   const currentRoom = currentHostel && selectedRoomId ? currentHostel.rooms[selectedRoomId] : null;
 
   async function confirmBooking() {
-    if (!selectedBed || !academicYear) return;
+    if (!selectedBed) return;
+    if (!academicYear) {
+      setBookingError(
+        "Booking is not open yet: no academic year has been set up. Please contact the hostel administrator.",
+      );
+      return;
+    }
     setBooking(true);
     setBookingError("");
     try {

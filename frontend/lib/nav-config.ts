@@ -20,6 +20,7 @@ import {
   Building2,
   DoorOpen,
   BadgeCheck,
+  CalendarDays,
   type LucideIcon,
 } from "lucide-react";
  
@@ -136,6 +137,12 @@ export const navItems: NavItem[] = [
     href: "/dashboard/payments",
     icon: Wallet,
     allow: ["student"],
+  },
+  {
+    label: "Academic Years",
+    href: "/dashboard/academic-years",
+    icon: CalendarDays,
+    allow: ["super_admin"],
   },
   {
     label: "Hostels",
