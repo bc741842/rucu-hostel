@@ -449,6 +449,12 @@ const SW: Record<string, string> = {
     "Tafuta maelezo, mwanafunzi...",
   "Print / Save PDF":
     "Chapisha / Hifadhi PDF",
+  "Available":
+    "Kipo",
+  "Taken":
+    "Kimeshachukuliwa",
+  "Unavailable":
+    "Hakipatikani",
 };
 
 interface LangContextValue {

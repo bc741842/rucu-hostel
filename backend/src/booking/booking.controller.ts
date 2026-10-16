@@ -28,6 +28,13 @@ export class BookingController {
     return this.bookingService.getAvailableBeds(req.user.studentId);
   }
 
+  // Status of every bed (free / held / occupied) for the room map.
+  @UseGuards(StudentGuard)
+  @Get('bed-statuses')
+  getBedStatuses(@Req() req: any) {
+    return this.bookingService.getBedStatuses(req.user.studentId);
+  }
+
   @UseGuards(StudentGuard)
   @Get('my')
   getMyBookings(@Req() req: any) {

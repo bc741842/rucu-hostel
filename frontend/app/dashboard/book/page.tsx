@@ -64,6 +64,9 @@ const itemVariants = {
 export default function BookBedPage() {
   const { t } = useLang();
   const [beds, setBeds] = useState<Bed[]>([]);
+  const [allBeds, setAllBeds] = useState<
+    { id: string; number: string; status: string; roomId: string }[]
+  >([]);
   const [academicYear, setAcademicYear] = useState<AcademicYear | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -89,6 +92,11 @@ export default function BookBedPage() {
         api.get("/academic-years"),
       ]);
       setBeds(bedsRes.data);
+      // The room map is a nice-to-have: if it fails, the free-bed list still works.
+      api
+        .get("/bookings/bed-statuses")
+        .then((r) => setAllBeds(r.data))
+        .catch(() => setAllBeds([]));
       const years = yearsRes.data ?? [];
       const current =
         years.find((y: AcademicYear & { status?: string }) => y.status === "active") ??
@@ -142,6 +150,9 @@ export default function BookBedPage() {
       });
       setBookingResult(res.data);
       setBeds((prev) => prev.filter((b) => b.id !== selectedBed.id));
+      setAllBeds((prev) =>
+        prev.map((b) => (b.id === selectedBed.id ? { ...b, status: "held" } : b)),
+      );
     } catch (err: any) {
       setBookingError(
         err?.response?.data?.message ||
@@ -301,41 +312,25 @@ export default function BookBedPage() {
                 TZS {Number(room.price).toLocaleString()}
               </p>
               <span className="mt-3 rounded-full bg-gold-500/15 px-2.5 py-1 text-xs font-medium text-gold-700">
-                {room.beds.length} beds free
+                {room.beds.length}
+                {allBeds.filter((b) => b.roomId === room.id).length > 0
+                  ? ` / ${allBeds.filter((b) => b.roomId === room.id).length}`
+                  : ""}{" "}
+                beds free
               </span>
             </motion.button>
           ))}
         </motion.div>
       )}
 
-      {/* LEVEL 3: Bed cards */}
+      {/* LEVEL 3: Room map */}
       {!loading && currentRoom && (
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
-        >
-          {currentRoom.beds.map((bed) => (
-            <motion.button
-              key={bed.id}
-              variants={itemVariants}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => setSelectedBed(bed)}
-              className="group flex flex-col rounded-card border border-line bg-white p-4 text-left transition-all hover:-translate-y-0.5 hover:border-navy-500 hover:shadow-md"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-navy-50 text-navy-700">
-                <BedDouble size={16} />
-              </span>
-              <p className="mt-3 font-display text-base font-semibold text-ink">
-                {bed.number}
-              </p>
-              <p className="mt-1 text-sm font-semibold text-navy-900">
-                TZS {Number(bed.room.price).toLocaleString()}
-              </p>
-            </motion.button>
-          ))}
-        </motion.div>
+        <RoomMap
+          freeBeds={currentRoom.beds}
+          allBeds={allBeds.filter((b) => b.roomId === currentRoom.id)}
+          price={currentRoom.price}
+          onPick={setSelectedBed}
+        />
       )}
 
       {/* Booking modal */}
@@ -463,6 +458,96 @@ function Row({
       >
         {value}
       </span>
+    </div>
+  );
+}
+
+const NATURAL = (a: string, b: string) =>
+  a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+
+/** Draws every bed in the room: free ones can be picked, the rest are shown as taken. */
+function RoomMap({
+  freeBeds,
+  allBeds,
+  price,
+  onPick,
+}: {
+  freeBeds: Bed[];
+  allBeds: { id: string; number: string; status: string }[];
+  price: string;
+  onPick: (b: Bed) => void;
+}) {
+  const { t } = useLang();
+  const freeById = new Map(freeBeds.map((b) => [b.id, b]));
+  // If the map data is unavailable, fall back to the free beds alone.
+  const tiles =
+    allBeds.length > 0
+      ? [...allBeds].sort((a, b) => NATURAL(a.number, b.number))
+      : [...freeBeds]
+          .sort((a, b) => NATURAL(a.number, b.number))
+          .map((b) => ({ id: b.id, number: b.number, status: "free" }));
+
+  const legend = [
+    { cls: "border-success-600/40 bg-success-50", label: t("Available") },
+    { cls: "border-line bg-cream-100", label: t("Taken") },
+    { cls: "border-danger-600/30 bg-danger-50", label: t("Unavailable") },
+  ];
+
+  return (
+    <div className="mt-6">
+      <div className="mb-4 flex flex-wrap items-center gap-4 text-xs text-ink-light">
+        {legend.map((l) => (
+          <span key={l.label} className="inline-flex items-center gap-1.5">
+            <span className={`h-3.5 w-3.5 rounded border ${l.cls}`} />
+            {l.label}
+          </span>
+        ))}
+        <span className="ml-auto font-semibold text-navy-900">
+          TZS {Number(price).toLocaleString()}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 rounded-card border border-line bg-white p-4 sm:grid-cols-3 lg:grid-cols-4">
+        {tiles.map((tile) => {
+          const free = tile.status === "free" && freeById.has(tile.id);
+          const unavailable = tile.status === "maintenance";
+          const style = free
+            ? "border-success-600/40 bg-success-50 text-success-600 hover:-translate-y-0.5 hover:shadow-md"
+            : unavailable
+              ? "border-danger-600/30 bg-danger-50 text-danger-600"
+              : "border-line bg-cream-100 text-ink-light";
+          const content = (
+            <>
+              <BedDouble size={22} />
+              <span className="mt-2 font-display text-base font-semibold">
+                {tile.number}
+              </span>
+              <span className="mt-0.5 text-[11px] font-medium uppercase tracking-wide">
+                {free ? t("Available") : unavailable ? t("Unavailable") : t("Taken")}
+              </span>
+            </>
+          );
+          const base =
+            "flex flex-col items-center rounded-card border px-3 py-4 text-center transition-all";
+          return free ? (
+            <button
+              key={tile.id}
+              onClick={() => onPick(freeById.get(tile.id)!)}
+              className={`${base} ${style}`}
+            >
+              {content}
+            </button>
+          ) : (
+            <div
+              key={tile.id}
+              aria-disabled
+              className={`${base} cursor-not-allowed opacity-80 ${style}`}
+            >
+              {content}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

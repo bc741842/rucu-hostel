@@ -98,6 +98,33 @@ export class BookingService {
     );
   }
  
+  // Every bed (any status) in hostels the student may use, with no personal
+  // data - just enough to draw a room map showing which beds are taken.
+  async getBedStatuses(studentId: string) {
+    const student = await this.prisma.student.findUnique({
+      where: { id: studentId },
+    });
+    if (!student) {
+      throw new NotFoundException('Student not found');
+    }
+
+    const beds = await this.prisma.bed.findMany({
+      select: {
+        id: true,
+        number: true,
+        status: true,
+        roomId: true,
+        room: { select: { hostel: { select: { genderAllowed: true } } } },
+      },
+    });
+
+    return beds
+      .filter((b) =>
+        hostelAllowsStudent(b.room.hostel.genderAllowed, student.gender),
+      )
+      .map(({ id, number, status, roomId }) => ({ id, number, status, roomId }));
+  }
+
   async getMyBookings(studentId: string) {
     return this.prisma.booking.findMany({
       where: { studentId },
