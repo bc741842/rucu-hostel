@@ -18,3 +18,17 @@ export function CardSkeleton() {
     </div>
   );
 }
+
+export function LoadingBlock({ rows = 3 }: { rows?: number }) {
+  return (
+    <div
+      role="status"
+      aria-label="Loading"
+      className="mt-6 space-y-3"
+    >
+      {Array.from({ length: rows }).map((_, i) => (
+        <CardSkeleton key={i} />
+      ))}
+    </div>
+  );
+}

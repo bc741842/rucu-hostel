@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BedDouble, CheckCircle2, Clock, Loader2, Wallet } from "lucide-react";
+import { BedDouble, CheckCircle2, Clock, Wallet } from "lucide-react";
 import { api } from "../../../lib/api";
+import { LoadingBlock } from "../../../components/ui/Skeleton";
 
 interface PaymentItem {
   id: string;
@@ -65,12 +66,7 @@ export default function MyPaymentsPage() {
         Track the status of your hostel fee payments and control numbers.
       </p>
 
-      {loading && (
-        <div className="mt-10 flex items-center justify-center gap-2 text-sm text-ink-light">
-          <Loader2 size={16} className="animate-spin" /> Loading your
-          payments...
-        </div>
-      )}
+      {loading && <LoadingBlock />}
 
       {!loading && error && (
         <div className="mt-8 rounded-card border border-danger-600/20 bg-danger-50 p-6 text-sm text-danger-600">

@@ -11,6 +11,7 @@ import {
   Hourglass,
 } from "lucide-react";
 import { api } from "../../../lib/api";
+import { LoadingBlock } from "../../../components/ui/Skeleton";
 
 interface Hostel {
   id: string;
@@ -159,11 +160,7 @@ export default function WaitingListPage() {
         list. We&apos;ll notify you as soon as a bed becomes available.
       </p>
 
-      {loading && (
-        <div className="mt-10 flex items-center justify-center gap-2 text-sm text-ink-light">
-          <Loader2 size={16} className="animate-spin" /> Loading...
-        </div>
-      )}
+      {loading && <LoadingBlock />}
 
       {!loading && error && (
         <div className="mt-8 flex items-center gap-2 rounded-card border border-danger-600/20 bg-danger-50 p-6 text-sm text-danger-600">

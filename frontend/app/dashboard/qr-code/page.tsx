@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { QRCodeSVG } from "qrcode.react";
 import {
-  Loader2,
   AlertCircle,
   CheckCircle2,
   QrCode as QrCodeIcon,
   BedDouble,
 } from "lucide-react";
 import { api } from "../../../lib/api";
+import { LoadingBlock } from "../../../components/ui/Skeleton";
 
 interface MyQrCode {
   qrCode: string;
@@ -52,7 +52,7 @@ export default function QrCodePage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Phase 2
+        Check-in
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
         My Check-in QR Code
@@ -62,11 +62,7 @@ export default function QrCodePage() {
       </p>
 
       <div className="mt-6 max-w-sm">
-        {loading && (
-          <div className="flex items-center gap-2 rounded-card border border-line bg-white p-8 text-sm text-ink-light">
-            <Loader2 size={16} className="animate-spin" /> Loading your QR code...
-          </div>
-        )}
+        {loading && <LoadingBlock />}
 
         {!loading && error && (
           <div className="flex items-center gap-2 rounded-lg border border-danger-600/20 bg-danger-50 p-4 text-sm text-danger-600">

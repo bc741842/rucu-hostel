@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Star, Loader2, AlertCircle, MessageSquare } from "lucide-react";
+import { Star, AlertCircle, MessageSquare } from "lucide-react";
 import { api } from "../../../lib/api";
+import { LoadingBlock } from "../../../components/ui/Skeleton";
 
 interface Hostel {
   id: string;
@@ -63,7 +64,7 @@ export default function RatingsSummaryPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Phase 3
+        Feedback
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
         Hostel Ratings
@@ -87,11 +88,7 @@ export default function RatingsSummaryPage() {
         </select>
       </div>
 
-      {loading && (
-        <div className="mt-6 flex items-center gap-2 rounded-card border border-line bg-white p-8 text-sm text-ink-light">
-          <Loader2 size={16} className="animate-spin" /> Loading...
-        </div>
-      )}
+      {loading && <LoadingBlock />}
 
       {!loading && error && (
         <div className="mt-6 flex items-center gap-2 rounded-lg border border-danger-600/20 bg-danger-50 p-4 text-sm text-danger-600">

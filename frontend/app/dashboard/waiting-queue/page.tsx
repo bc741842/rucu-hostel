@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Building2,
-  Loader2,
   AlertCircle,
   Phone,
   Mail,
@@ -12,6 +11,7 @@ import {
   ListOrdered,
 } from "lucide-react";
 import { api } from "../../../lib/api";
+import { LoadingBlock } from "../../../components/ui/Skeleton";
 
 interface Hostel {
   id: string;
@@ -100,7 +100,7 @@ export default function WaitingQueuePage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Phase 2
+        Hostel Operations
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
         Bed Waiting Queue
@@ -128,11 +128,7 @@ export default function WaitingQueuePage() {
         </span>
       </div>
 
-      {loading && (
-        <div className="mt-10 flex items-center justify-center gap-2 text-sm text-ink-light">
-          <Loader2 size={16} className="animate-spin" /> Loading queue...
-        </div>
-      )}
+      {loading && <LoadingBlock />}
 
       {!loading && error && (
         <div className="mt-8 flex items-center gap-2 rounded-card border border-danger-600/20 bg-danger-50 p-6 text-sm text-danger-600">

@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { api } from "../../../lib/api";
+import { LoadingBlock } from "../../../components/ui/Skeleton";
 import { useToast } from "../../../components/ui/Toast";
 
 interface Hostel {
@@ -176,7 +177,7 @@ export default function ManageAnnouncementsPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Phase 2
+        Communication
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
         Manage Announcements
@@ -290,11 +291,7 @@ export default function ManageAnnouncementsPage() {
         All Announcements
       </h3>
 
-      {loading && (
-        <div className="mt-6 flex items-center justify-center gap-2 text-sm text-ink-light">
-          <Loader2 size={16} className="animate-spin" /> Loading...
-        </div>
-      )}
+      {loading && <LoadingBlock />}
 
       {!loading && error && (
         <div className="mt-6 flex items-center gap-2 rounded-card border border-danger-600/20 bg-danger-50 p-6 text-sm text-danger-600">

@@ -207,7 +207,7 @@ export default function ChatManagePage() {
   return (
     <div className="flex h-[calc(100vh-180px)] flex-col">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Phase 2
+        Community
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
         Monitor Chat

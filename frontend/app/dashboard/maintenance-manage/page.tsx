@@ -12,6 +12,7 @@ import {
   Phone,
 } from "lucide-react";
 import { api } from "../../../lib/api";
+import { LoadingBlock } from "../../../components/ui/Skeleton";
 
 interface Hostel {
   id: string;
@@ -108,7 +109,7 @@ export default function MaintenanceManagePage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Phase 3
+        Hostel Operations
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
         Manage Maintenance Requests
@@ -144,11 +145,7 @@ export default function MaintenanceManagePage() {
       </div>
 
       <div className="mt-5 max-w-3xl">
-        {loading && (
-          <div className="flex items-center gap-2 rounded-card border border-line bg-white p-6 text-sm text-ink-light">
-            <Loader2 size={16} className="animate-spin" /> Loading...
-          </div>
-        )}
+        {loading && <LoadingBlock />}
 
         {!loading && error && (
           <div className="flex items-center gap-2 rounded-lg border border-danger-600/20 bg-danger-50 p-4 text-sm text-danger-600">

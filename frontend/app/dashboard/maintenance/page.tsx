@@ -12,6 +12,7 @@ import {
   Hourglass,
 } from "lucide-react";
 import { api } from "../../../lib/api";
+import { LoadingBlock } from "../../../components/ui/Skeleton";
 
 interface MaintenanceRequest {
   id: string;
@@ -96,7 +97,7 @@ export default function MaintenancePage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Phase 3
+        Support
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
         Maintenance Requests
@@ -168,11 +169,7 @@ export default function MaintenancePage() {
       <div className="mt-8 max-w-xl">
         <p className="text-sm font-semibold text-ink">My reports</p>
 
-        {loading && (
-          <div className="mt-3 flex items-center gap-2 rounded-card border border-line bg-white p-6 text-sm text-ink-light">
-            <Loader2 size={16} className="animate-spin" /> Loading...
-          </div>
-        )}
+        {loading && <LoadingBlock />}
 
         {!loading && error && (
           <div className="mt-3 flex items-center gap-2 rounded-lg border border-danger-600/20 bg-danger-50 p-4 text-sm text-danger-600">

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Megaphone,
-  Loader2,
   AlertCircle,
   Building2,
   Globe,
@@ -12,6 +11,7 @@ import {
   Download,
 } from "lucide-react";
 import { api } from "../../../lib/api";
+import { LoadingBlock } from "../../../components/ui/Skeleton";
 import { useToast } from "../../../components/ui/Toast";
 
 interface Announcement {
@@ -102,11 +102,7 @@ export default function AnnouncementsPage() {
         Important updates and notices from the hostel administration.
       </p>
 
-      {loading && (
-        <div className="mt-10 flex items-center justify-center gap-2 text-sm text-ink-light">
-          <Loader2 size={16} className="animate-spin" /> Loading announcements...
-        </div>
-      )}
+      {loading && <LoadingBlock />}
 
       {!loading && error && (
         <div className="mt-8 flex items-center gap-2 rounded-card border border-danger-600/20 bg-danger-50 p-6 text-sm text-danger-600">

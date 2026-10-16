@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Star, Loader2, AlertCircle, CheckCircle2, Send } from "lucide-react";
 import { api } from "../../../lib/api";
+import { LoadingBlock } from "../../../components/ui/Skeleton";
 
 interface MyRating {
   rating: number;
@@ -72,7 +73,7 @@ export default function RatingsPage() {
   return (
     <div>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-navy-700">
-        Phase 3
+        Feedback
       </p>
       <h2 className="mt-1 font-display text-3xl font-semibold text-ink">
         Rate Your Hostel
@@ -82,11 +83,7 @@ export default function RatingsPage() {
       </p>
 
       <div className="mt-6 max-w-md">
-        {loading && (
-          <div className="flex items-center gap-2 rounded-card border border-line bg-white p-8 text-sm text-ink-light">
-            <Loader2 size={16} className="animate-spin" /> Loading...
-          </div>
-        )}
+        {loading && <LoadingBlock />}
 
         {!loading && error && (
           <div className="flex items-center gap-2 rounded-lg border border-danger-600/20 bg-danger-50 p-4 text-sm text-danger-600">
