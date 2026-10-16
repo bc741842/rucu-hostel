@@ -13,12 +13,12 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden bg-cream">
+    <div className="flex h-screen w-full flex-col overflow-hidden bg-cream print:block print:h-auto print:overflow-visible">
       <Topbar onMobileMenuToggle={() => setMobileOpen(true)} />
-      <div className="h-[3px] w-full shrink-0 bg-gold-500" />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="h-[3px] w-full shrink-0 bg-gold-500 print:hidden" />
+      <div className="flex flex-1 overflow-hidden print:block print:overflow-visible">
         {/* Desktop sidebar */}
-        <div className="hidden sm:flex">
+        <div className="hidden sm:flex print:hidden">
           <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
         </div>
 
@@ -66,7 +66,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="flex-1 overflow-y-auto scrollbar-thin p-4 sm:p-6"
+          className="flex-1 overflow-y-auto scrollbar-thin p-4 sm:p-6 print:overflow-visible print:p-0"
         >
           {children}
         </motion.main>

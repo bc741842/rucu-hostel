@@ -13,6 +13,11 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useTable } from "../../../components/ui/useTable";
+import SearchInput from "../../../components/ui/SearchInput";
+import Pagination from "../../../components/ui/Pagination";
+import Button from "../../../components/ui/Button";
+import { downloadCsv } from "../../../lib/csv";
 import { useLang } from "../../../lib/i18n";
 
 interface Hostel {
@@ -56,6 +61,15 @@ export default function MaintenanceManagePage() {
   const [statusFilter, setStatusFilter] = useState("");
 
   const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
+  const table = useTable(requests, (x) => `${x.location} ${x.description} ${x.student.name} ${x.student.regNo} ${x.hostel.name}`, 8);
+
+  function exportCsv() {
+    downloadCsv("maintenance-requests.csv", [
+      ["Date", "Hostel", "Location", "Description", "Student", "RegNo", "Status"],
+      ...table.filtered.map((x) => [new Date(x.createdAt).toLocaleDateString("en-GB"), x.hostel.name, x.location, x.description, x.student.name, x.student.regNo, x.status]),
+    ]);
+  }
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -147,6 +161,25 @@ export default function MaintenanceManagePage() {
       </div>
 
       <div className="mt-5 max-w-3xl">
+        {!loading && !error && requests.length > 0 && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <SearchInput
+              value={table.query}
+              onChange={table.setQuery}
+              placeholder="Search description, student..."
+            />
+            <Button variant="secondary" onClick={exportCsv}>
+              {t("Export CSV")}
+            </Button>
+          </div>
+        )}
+
+        {!loading && !error && requests.length > 0 && table.filtered.length === 0 && (
+          <div className="mt-4 rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
+            {t("No results match your search.")}
+          </div>
+        )}
+
         {loading && <LoadingBlock />}
 
         {!loading && error && (
@@ -161,9 +194,9 @@ export default function MaintenanceManagePage() {
           </div>
         )}
 
-        {!loading && !error && requests.length > 0 && (
-          <div className="space-y-3">
-            {requests.map((r, i) => {
+        {!loading && !error && table.filtered.length > 0 && (
+          <div className="mt-4 space-y-3">
+            {table.pageRows.map((r, i) => {
               const next = NEXT_STATUS[r.status];
               return (
                 <motion.div
@@ -252,6 +285,17 @@ export default function MaintenanceManagePage() {
             })}
           </div>
         )}
+
+        {!loading && !error && (
+          <Pagination
+            page={table.page}
+            pageCount={table.pageCount}
+            total={table.filtered.length}
+            pageSize={table.pageSize}
+            onPage={table.setPage}
+          />
+        )}
+
       </div>
     </div>
   );

@@ -6,6 +6,11 @@ import { BedDouble, Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
 import { useAuth } from "../../../lib/auth-context";
+import { useTable } from "../../../components/ui/useTable";
+import SearchInput from "../../../components/ui/SearchInput";
+import Pagination from "../../../components/ui/Pagination";
+import Button from "../../../components/ui/Button";
+import { downloadCsv } from "../../../lib/csv";
 import { useLang } from "../../../lib/i18n";
 
 interface Hostel {
@@ -41,6 +46,15 @@ export default function BedsPage() {
   const [beds, setBeds] = useState<Bed[]>([]);
   const [hostelFilter, setHostelFilter] = useState("");
   const [roomFilter, setRoomFilter] = useState("");
+  const table = useTable(beds, (x) => `${x.number} ${x.room.number} ${x.room.hostel.name} ${x.status}`, 12);
+
+  function exportCsv() {
+    downloadCsv("beds.csv", [
+      ["Bed", "Room", "Hostel", "Status"],
+      ...table.filtered.map((x) => [x.number, x.room.number, x.room.hostel.name, x.status]),
+    ]);
+  }
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -206,6 +220,25 @@ export default function BedsPage() {
         </select>
       </div>
 
+      {!loading && !error && beds.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <SearchInput
+            value={table.query}
+            onChange={table.setQuery}
+            placeholder="Search bed number..."
+          />
+          <Button variant="secondary" onClick={exportCsv}>
+            {t("Export CSV")}
+          </Button>
+        </div>
+      )}
+
+      {!loading && !error && beds.length > 0 && table.filtered.length === 0 && (
+        <div className="mt-4 rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
+          {t("No results match your search.")}
+        </div>
+      )}
+
       {loading && <LoadingBlock />}
 
       {!loading && error && (
@@ -220,9 +253,9 @@ export default function BedsPage() {
         </div>
       )}
 
-      {!loading && !error && beds.length > 0 && (
-        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {beds.map((bed) => (
+      {!loading && !error && table.filtered.length > 0 && (
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {table.pageRows.map((bed) => (
             <div key={bed.id} className="rounded-card border border-line bg-white p-4">
               <div className="flex items-start justify-between">
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-navy-50 text-navy-700">
@@ -261,6 +294,16 @@ export default function BedsPage() {
             </div>
           ))}
         </div>
+      )}
+
+      {!loading && !error && (
+        <Pagination
+          page={table.page}
+          pageCount={table.pageCount}
+          total={table.filtered.length}
+          pageSize={table.pageSize}
+          onPage={table.setPage}
+        />
       )}
 
       {/* Create/Edit modal */}

@@ -13,6 +13,9 @@ import {
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
 import { useLang } from "../../../lib/i18n";
+import Button from "../../../components/ui/Button";
+import { downloadCsv } from "../../../lib/csv";
+import { Download, Printer } from "lucide-react";
 
 interface AcademicYear {
   id: string;
@@ -85,6 +88,35 @@ export default function ReportsPage() {
     }
   }
 
+  function exportReport() {
+    if (!data) return;
+    const year = years.find((y) => y.id === yearId)?.name ?? "";
+    downloadCsv(`rucu-report-${year.replace("/", "-")}.csv`, [
+      ["RUCU Hostel Report", year],
+      [],
+      ["Overall occupancy", "Occupied beds", "Total beds", "Rate %"],
+      ["", data.overall.occupiedBeds, data.overall.totalBeds, data.overall.occupancyRate],
+      [],
+      ["Hostel", "Total beds", "Occupied", "Free", "Occupancy %"],
+      ...data.occupancy.map((o) => [o.hostel, o.totalBeds, o.occupiedBeds, o.freeBeds, o.occupancyRate]),
+      [],
+      ["Month", "Revenue (TZS)"],
+      ...data.revenue.trend.map((r) => [r.month, r.amount]),
+      ["Total revenue", data.revenue.total],
+      [],
+      ["Checked in", data.checkIns.checkedIn],
+      ["Paid, not checked in", data.checkIns.paidNotCheckedIn],
+      [],
+      ["Maintenance", "Count"],
+      ["Open", data.maintenance.Open],
+      ["In progress", data.maintenance.InProgress],
+      ["Resolved", data.maintenance.Resolved],
+      [],
+      ["Waiting list by hostel", "Students"],
+      ...data.waitingList.map((w) => [w.hostel, w.count]),
+    ]);
+  }
+
   const maxRevenue = data
     ? Math.max(...data.revenue.trend.map((t) => t.amount), 1)
     : 1;
@@ -101,7 +133,7 @@ export default function ReportsPage() {
         {t("Occupancy, revenue, check-ins and maintenance at a glance.")}
       </p>
 
-      <div className="mt-5">
+      <div className="mt-5 flex flex-wrap items-center gap-3 print:hidden">
         <select
           value={yearId}
           onChange={(e) => setYearId(e.target.value)}
@@ -113,6 +145,16 @@ export default function ReportsPage() {
             </option>
           ))}
         </select>
+        {data && !loading && !error && (
+          <>
+            <Button variant="secondary" icon={<Download size={16} />} onClick={exportReport}>
+              {t("Export CSV")}
+            </Button>
+            <Button variant="secondary" icon={<Printer size={16} />} onClick={() => window.print()}>
+              {t("Print / Save PDF")}
+            </Button>
+          </>
+        )}
       </div>
 
       {loading && <LoadingBlock />}

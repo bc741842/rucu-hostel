@@ -427,6 +427,28 @@ const SW: Record<string, string> = {
     "Nenosiri Jipya",
   "Confirm New Password":
     "Thibitisha Nenosiri Jipya",
+  "Search...":
+    "Tafuta...",
+  "of":
+    "kati ya",
+  "Previous page":
+    "Ukurasa uliopita",
+  "Next page":
+    "Ukurasa unaofuata",
+  "No results match your search.":
+    "Hakuna matokeo yanayolingana na utafutaji wako.",
+  "Export CSV":
+    "Pakua CSV",
+  "Search student, control number...":
+    "Tafuta mwanafunzi, namba ya malipo...",
+  "Search room number...":
+    "Tafuta namba ya chumba...",
+  "Search bed number...":
+    "Tafuta namba ya kitanda...",
+  "Search description, student...":
+    "Tafuta maelezo, mwanafunzi...",
+  "Print / Save PDF":
+    "Chapisha / Hifadhi PDF",
 };
 
 interface LangContextValue {

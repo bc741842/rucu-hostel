@@ -5,6 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { DoorOpen, Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useTable } from "../../../components/ui/useTable";
+import SearchInput from "../../../components/ui/SearchInput";
+import Pagination from "../../../components/ui/Pagination";
+import Button from "../../../components/ui/Button";
+import { downloadCsv } from "../../../lib/csv";
 import { useLang } from "../../../lib/i18n";
 
 interface Hostel {
@@ -26,6 +31,15 @@ export default function RoomsPage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [hostels, setHostels] = useState<Hostel[]>([]);
   const [hostelFilter, setHostelFilter] = useState("");
+  const table = useTable(rooms, (x) => `${x.number} ${x.hostel.name} ${x.floor ?? ""}`, 10);
+
+  function exportCsv() {
+    downloadCsv("rooms.csv", [
+      ["Room", "Hostel", "Floor", "Price (TZS)", "Beds"],
+      ...table.filtered.map((x) => [x.number, x.hostel.name, x.floor ?? "", Number(x.price), x.beds.length]),
+    ]);
+  }
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -177,6 +191,25 @@ export default function RoomsPage() {
         </div>
       )}
 
+      {!loading && !error && rooms.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <SearchInput
+            value={table.query}
+            onChange={table.setQuery}
+            placeholder="Search room number..."
+          />
+          <Button variant="secondary" onClick={exportCsv}>
+            {t("Export CSV")}
+          </Button>
+        </div>
+      )}
+
+      {!loading && !error && rooms.length > 0 && table.filtered.length === 0 && (
+        <div className="mt-4 rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
+          {t("No results match your search.")}
+        </div>
+      )}
+
       {loading && <LoadingBlock />}
 
       {!loading && error && (
@@ -191,8 +224,8 @@ export default function RoomsPage() {
         </div>
       )}
 
-      {!loading && !error && rooms.length > 0 && (
-        <div className="mt-6 overflow-hidden rounded-card border border-line bg-white">
+      {!loading && !error && table.filtered.length > 0 && (
+        <div className="mt-4 overflow-hidden rounded-card border border-line bg-white">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-line bg-cream">
@@ -205,7 +238,7 @@ export default function RoomsPage() {
               </tr>
             </thead>
             <tbody>
-              {rooms.map((room) => (
+              {table.pageRows.map((room) => (
                 <tr key={room.id} className="border-b border-line last:border-0">
                   <td className="px-5 py-3 font-medium text-ink">{room.number}</td>
                   <td className="px-5 py-3 text-ink-light">{room.hostel.name}</td>
@@ -236,6 +269,17 @@ export default function RoomsPage() {
           </table>
         </div>
       )}
+
+      {!loading && !error && (
+        <Pagination
+          page={table.page}
+          pageCount={table.pageCount}
+          total={table.filtered.length}
+          pageSize={table.pageSize}
+          onPage={table.setPage}
+        />
+      )}
+
 
       {/* Create/Edit modal */}
       <AnimatePresence>

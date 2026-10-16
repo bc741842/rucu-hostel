@@ -12,6 +12,11 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { LoadingBlock } from "../../../components/ui/Skeleton";
+import { useTable } from "../../../components/ui/useTable";
+import SearchInput from "../../../components/ui/SearchInput";
+import Pagination from "../../../components/ui/Pagination";
+import Button from "../../../components/ui/Button";
+import { downloadCsv } from "../../../lib/csv";
 import { useLang } from "../../../lib/i18n";
 
 interface PaymentRow {
@@ -34,6 +39,27 @@ export default function ConfirmPaymentsPage() {
   const [payments, setPayments] = useState<PaymentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const table = useTable(
+    payments,
+    (p) =>
+      `${p.controlNumber} ${p.booking.student.name} ${p.booking.student.regNo} ${p.booking.bed.room.hostel.name} ${p.booking.bed.room.number} ${p.booking.bed.number}`,
+  );
+
+  function exportCsv() {
+    downloadCsv("pending-payments.csv", [
+      ["Control No.", "Student", "RegNo", "Hostel", "Room", "Bed", "Amount (TZS)"],
+      ...table.filtered.map((p) => [
+        p.controlNumber,
+        p.booking.student.name,
+        p.booking.student.regNo,
+        p.booking.bed.room.hostel.name,
+        p.booking.bed.room.number,
+        p.booking.bed.number,
+        Number(p.amount),
+      ]),
+    ]);
+  }
+
   const [confirmTarget, setConfirmTarget] = useState<PaymentRow | null>(null);
   const [confirming, setConfirming] = useState(false);
   const [confirmError, setConfirmError] = useState("");
@@ -103,7 +129,26 @@ export default function ConfirmPaymentsPage() {
       )}
 
       {!loading && !error && payments.length > 0 && (
-        <div className="mt-6 overflow-hidden rounded-card border border-line bg-white">
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+          <SearchInput
+            value={table.query}
+            onChange={table.setQuery}
+            placeholder="Search student, control number..."
+          />
+          <Button variant="secondary" onClick={exportCsv}>
+            {t("Export CSV")}
+          </Button>
+        </div>
+      )}
+
+      {!loading && !error && payments.length > 0 && table.filtered.length === 0 && (
+        <div className="mt-4 rounded-card border border-line bg-white p-8 text-center text-sm text-ink-light">
+          {t("No results match your search.")}
+        </div>
+      )}
+
+      {!loading && !error && table.filtered.length > 0 && (
+        <div className="mt-4 overflow-hidden rounded-card border border-line bg-white">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-line bg-cream">
@@ -125,7 +170,7 @@ export default function ConfirmPaymentsPage() {
               </tr>
             </thead>
             <tbody>
-              {payments.map((payment) => (
+              {table.pageRows.map((payment) => (
                 <tr key={payment.id} className="border-b border-line last:border-0">
                   <td className="px-5 py-3 font-medium text-ink">
                     {payment.controlNumber}
@@ -159,6 +204,16 @@ export default function ConfirmPaymentsPage() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {!loading && !error && (
+        <Pagination
+          page={table.page}
+          pageCount={table.pageCount}
+          total={table.filtered.length}
+          pageSize={table.pageSize}
+          onPage={table.setPage}
+        />
       )}
 
       {/* Confirm modal */}
