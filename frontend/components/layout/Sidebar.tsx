@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Fragment } from "react";
 import { motion } from "framer-motion";
 import { ChevronsLeft, ChevronsRight, LogOut } from "lucide-react";
 import { useAuth } from "../../lib/auth-context";
@@ -57,26 +58,37 @@ export default function Sidebar({
 
       {/* Nav */}
       <nav className={`flex-1 overflow-y-auto scrollbar-thin px-3 space-y-1.5 ${!showToggle ? "pt-4" : ""}`}>
-        {visibleItems.map((item) => {
+        {visibleItems.map((item, idx) => {
+          const showGroup =
+            idx === 0 || visibleItems[idx - 1].group !== item.group;
           const isActive =
             pathname === item.href ||
             (item.href !== "/dashboard" && pathname?.startsWith(item.href));
           const Icon = item.icon;
           return (
+            <Fragment key={item.href}>
+            {showGroup &&
+              (collapsed ? (
+                idx > 0 && <div className="mx-3 my-2 border-t border-white/10" />
+              ) : (
+                <p className="px-3 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/35">
+                  {t(item.group ?? "")}
+                </p>
+              ))}
             <Link
-              key={item.href}
               href={item.href}
               onClick={onNavigate}
               title={collapsed ? t(item.label) : undefined}
-              className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
+              className={`group relative flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors sm:py-2.5 ${
                 isActive
-                  ? "bg-gold-500/15 text-gold-300"
+                  ? "bg-gold-500/15 text-gold-300 before:absolute before:-left-3 before:top-2 before:bottom-2 before:w-[3px] before:rounded-r-full before:bg-gold-500"
                   : "text-white/65 hover:bg-white/5 hover:text-white"
               } ${collapsed ? "justify-center" : ""}`}
             >
               <Icon size={19} strokeWidth={2} className="shrink-0" />
               {!collapsed && <span className="truncate font-medium">{t(item.label)}</span>}
             </Link>
+            </Fragment>
           );
         })}
       </nav>

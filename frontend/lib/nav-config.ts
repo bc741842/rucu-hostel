@@ -28,6 +28,7 @@ export interface NavItem {
   label: string;
   href: string;
   icon: LucideIcon;
+  group?: string;
   allow?: Array<"student" | "super_admin" | "accountant" | "warden">;
 }
  
@@ -176,3 +177,32 @@ export const navItems: NavItem[] = [
   },
 ];
  
+const GROUPS: Record<string, string> = {
+  Dashboard: "Main",
+  "Book a Bed": "Hostel",
+  "My Bookings": "Hostel",
+  "My Roommates": "Hostel",
+  "My QR Code": "Hostel",
+  "My Payments": "Finance",
+  "Confirm Payments": "Finance",
+  "Waiting List": "Hostel",
+  "Waiting Queue": "Hostel",
+  "QR Check-in": "Hostel",
+  Hostels: "Setup",
+  Rooms: "Setup",
+  Beds: "Setup",
+  "Academic Years": "Setup",
+  Chat: "Community",
+  "Monitor Chat": "Community",
+  Announcements: "Community",
+  "Manage Announcements": "Community",
+  "Rate My Hostel": "Community",
+  "Hostel Ratings": "Community",
+  Maintenance: "Support",
+  "Manage Maintenance": "Support",
+  Reports: "Insights",
+  "Audit Log": "Insights",
+};
+const ORDER = ["Main", "Hostel", "Finance", "Community", "Support", "Setup", "Insights"];
+for (const item of navItems) item.group = GROUPS[item.label] ?? "Main";
+navItems.sort((a, b) => ORDER.indexOf(a.group!) - ORDER.indexOf(b.group!));

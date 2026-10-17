@@ -12,6 +12,12 @@ const STATUS_STYLES: Record<string, string> = {
   Expired: "bg-cream-100 text-ink-light",
   Cancelled: "bg-danger-50 text-danger-600",
   Refunded: "bg-cream-100 text-ink-light",
+  Open: "bg-danger-50 text-danger-600",
+  InProgress: "bg-warning-50 text-warning-600",
+  Resolved: "bg-success-50 text-success-600",
+  Available: "bg-success-50 text-success-600",
+  Occupied: "bg-navy-50 text-navy-700",
+  Maintenance: "bg-danger-50 text-danger-600",
 };
 
 export default function Badge({
@@ -26,11 +32,12 @@ export default function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold",
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold",
         STATUS_STYLES[status] ?? "bg-cream-100 text-ink-light",
         className,
       )}
     >
+      <span className="h-1.5 w-1.5 rounded-full bg-current" />
       {label ?? status}
     </span>
   );

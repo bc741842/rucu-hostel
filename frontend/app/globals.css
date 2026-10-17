@@ -55,6 +55,37 @@
     color: var(--color-navy-900);
   }
  
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  h2, h3 {
+    letter-spacing: -0.01em;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  body {
+    line-height: 1.55;
+    font-feature-settings: "tnum" 0, "cv11";
+  }
+
+  /* Buttons give a small press response everywhere */
+  button:not(:disabled) {
+    transition-property: transform, background-color, color, box-shadow, opacity;
+    transition-duration: 150ms;
+  }
+  button:not(:disabled):active {
+    transform: scale(0.97);
+  }
+
+  /* Touch screens: comfortable tap targets for form fields */
+  @media (pointer: coarse) {
+    select,
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
+      min-height: 44px;
+    }
+  }
+
   :focus-visible {
     outline: 2px solid var(--color-navy-900);
     outline-offset: 2px;
@@ -72,6 +103,30 @@
   }
 }
  
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Children of .stagger glide in one after another */
+.stagger > * {
+  animation: rise-in 0.4s ease-out both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 60ms; }
+.stagger > *:nth-child(3) { animation-delay: 120ms; }
+.stagger > *:nth-child(4) { animation-delay: 180ms; }
+.stagger > *:nth-child(5) { animation-delay: 240ms; }
+.stagger > *:nth-child(6) { animation-delay: 300ms; }
+.stagger > *:nth-child(7) { animation-delay: 360ms; }
+.stagger > *:nth-child(n + 8) { animation-delay: 420ms; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

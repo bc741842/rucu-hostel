@@ -218,10 +218,11 @@ export default function DashboardPage() {
       {user?.type === "student" ? (
         <>
           <NextStep loading={loading} booking={activeBooking} />
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+          <div className="stagger mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
             <StatCard
               icon={BedDouble}
               label="Available Beds"
+              tone="success"
               value={studentStats.availableBeds}
               loading={loading}
               href="/dashboard/book"
@@ -230,6 +231,7 @@ export default function DashboardPage() {
             <StatCard
               icon={ClipboardList}
               label="My Active Bookings"
+              tone="navy"
               value={studentStats.myBookings}
               loading={loading}
               href="/dashboard/bookings"
@@ -237,6 +239,7 @@ export default function DashboardPage() {
             <StatCard
               icon={Wallet}
               label="Pending Payments"
+              tone="warning"
               value={studentStats.pendingPayments}
               loading={loading}
               href="/dashboard/payments"
@@ -244,6 +247,7 @@ export default function DashboardPage() {
             <StatCard
               icon={Bell}
               label="Unread Notifications"
+              tone="gold"
               value={studentStats.unread}
               loading={loading}
               href="/dashboard/notifications"
@@ -251,6 +255,7 @@ export default function DashboardPage() {
             <StatCard
               icon={Wrench}
               label="Open Maintenance Requests"
+              tone="danger"
               value={studentStats.openIssues}
               loading={loading}
               href="/dashboard/maintenance"
@@ -276,7 +281,7 @@ export default function DashboardPage() {
                 {t("There are no announcements right now.")}
               </p>
             ) : (
-              <div className="mt-3 space-y-3">
+              <div className="stagger mt-3 space-y-3">
                 {news.map((a) => (
                   <Link
                     key={a.id}
@@ -404,7 +409,7 @@ function AdminOverview({
           {loading ? (
             <Skeleton className="mt-3 h-20 w-full" />
           ) : (
-            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="stagger mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {todo.map((x) => (
                 <Link
                   key={x.href}
@@ -421,10 +426,11 @@ function AdminOverview({
         </section>
       )}
 
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <div className="stagger mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard
           icon={Building2}
           label="Hostels"
+              tone="navy"
           value={admin.hostels}
           loading={loading}
           href="/dashboard/hostels"
@@ -432,6 +438,7 @@ function AdminOverview({
         <StatCard
           icon={DoorOpen}
           label="Rooms"
+              tone="navy"
           value={admin.rooms}
           loading={loading}
           href="/dashboard/rooms"
@@ -439,6 +446,7 @@ function AdminOverview({
         <StatCard
           icon={BedDouble}
           label="Total Beds"
+              tone="navy"
           value={report?.overall.totalBeds ?? 0}
           loading={loading}
           href="/dashboard/beds"
@@ -446,6 +454,7 @@ function AdminOverview({
         <StatCard
           icon={CheckCircle2}
           label="Free Beds"
+              tone="success"
           value={
             report ? report.overall.totalBeds - report.overall.occupiedBeds : 0
           }
@@ -455,6 +464,7 @@ function AdminOverview({
         <StatCard
           icon={Percent}
           label="Occupancy"
+              tone="gold"
           value={`${report?.overall.occupancyRate ?? 0}%`}
           loading={loading}
           href="/dashboard/reports"
@@ -463,6 +473,7 @@ function AdminOverview({
           <StatCard
             icon={Wallet}
             label="Revenue"
+              tone="success"
             value={`TZS ${(report?.revenue.total ?? 0).toLocaleString()}`}
             loading={loading}
             href="/dashboard/reports"
@@ -471,6 +482,7 @@ function AdminOverview({
         <StatCard
           icon={QrCode}
           label="Checked In"
+              tone="success"
           value={report?.checkIns.checkedIn ?? 0}
           loading={loading}
           href="/dashboard/checkin"
@@ -478,6 +490,7 @@ function AdminOverview({
         <StatCard
           icon={Wrench}
           label="Open Issues"
+              tone="danger"
           value={openIssues}
           loading={loading}
           href="/dashboard/maintenance-manage"

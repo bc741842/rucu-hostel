@@ -489,6 +489,9 @@ const SW: Record<string, string> = {
     "Kamera ikishindwa kuscan, mpe warden code hii:",
   "Copy code": "Nakili code",
   "Delete this message permanently?": "Futa ujumbe huu kabisa?",
+  "Main": "Kuu",
+  "Finance": "Fedha",
+  "Setup": "Mipangilio",
 };
 
 interface LangContextValue {

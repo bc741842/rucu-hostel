@@ -33,7 +33,7 @@ export default function Button({
       {...rest}
       disabled={disabled || loading}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60",
+        "inline-flex items-center justify-center gap-2 min-h-[44px] rounded-lg px-4 py-2.5 text-sm font-semibold transition-all sm:min-h-0 disabled:cursor-not-allowed disabled:opacity-60",
         VARIANTS[variant],
         className,
       )}

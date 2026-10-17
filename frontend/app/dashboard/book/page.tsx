@@ -9,6 +9,8 @@ import {
   ChevronRight,
   DoorOpen,
   Loader2,
+  User,
+  Wrench,
   X,
 } from "lucide-react";
 import { api } from "../../../lib/api";
@@ -507,19 +509,38 @@ function RoomMap({
         </span>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 rounded-card border border-line bg-white p-4 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="stagger grid grid-cols-2 gap-3 rounded-card border border-line bg-white p-4 sm:grid-cols-3 lg:grid-cols-4">
         {tiles.map((tile) => {
           const free = tile.status === "free" && freeById.has(tile.id);
           const unavailable = tile.status === "maintenance";
-          const style = free
-            ? "border-success-600/40 bg-success-50 text-success-600 hover:-translate-y-0.5 hover:shadow-md"
+          const tone = free
+            ? "border-success-600/40 bg-success-50 text-success-600"
             : unavailable
               ? "border-danger-600/30 bg-danger-50 text-danger-600"
               : "border-line bg-cream-100 text-ink-light";
+          const frame = free
+            ? "bg-success-600/15 border-success-600/40"
+            : unavailable
+              ? "bg-danger-600/10 border-danger-600/30"
+              : "bg-ink-light/10 border-line";
           const content = (
             <>
-              <BedDouble size={22} />
-              <span className="mt-2 font-display text-base font-semibold">
+              {/* A little bed: headboard, pillow, mattress */}
+              <span className={`relative flex h-14 w-full max-w-[104px] flex-col rounded-lg border ${frame}`}>
+                <span className="absolute inset-x-1.5 top-1.5 h-3.5 rounded-md bg-white/80 shadow-sm" />
+                <span className={`absolute inset-x-0 bottom-0 h-7 rounded-b-lg ${free ? "bg-success-600/25" : unavailable ? "bg-danger-600/20" : "bg-ink-light/20"}`} />
+                {!free && !unavailable && (
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    <User size={18} />
+                  </span>
+                )}
+                {unavailable && (
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    <Wrench size={16} />
+                  </span>
+                )}
+              </span>
+              <span className="mt-2.5 font-display text-base font-semibold">
                 {tile.number}
               </span>
               <span className="mt-0.5 text-[11px] font-medium uppercase tracking-wide">
@@ -528,7 +549,10 @@ function RoomMap({
             </>
           );
           const base =
-            "flex flex-col items-center rounded-card border px-3 py-4 text-center transition-all";
+            "flex min-h-[44px] flex-col items-center rounded-card border px-3 py-3.5 text-center transition-all duration-200";
+          const style = free
+            ? `${tone} hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(63,122,87,0.25)] active:scale-95`
+            : tone;
           return free ? (
             <button
               key={tile.id}
