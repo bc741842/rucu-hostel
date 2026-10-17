@@ -16,6 +16,7 @@ import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
  
 @Injectable()
 export class AuthService {
@@ -204,6 +205,28 @@ export class AuthService {
     return { message: 'Password reset successful. You can now log in.' };
   }
  
+  /** A logged-in student changes their own password. */
+  async changePassword(studentId: string, dto: ChangePasswordDto) {
+    const student = await this.prisma.student.findUnique({
+      where: { id: studentId },
+    });
+    if (!student) throw new NotFoundException('Student not found.');
+
+    const ok = await bcrypt.compare(dto.currentPassword, student.password);
+    if (!ok) throw new UnauthorizedException('Your current password is wrong.');
+    if (dto.currentPassword === dto.newPassword) {
+      throw new BadRequestException(
+        'The new password must be different from the current one.',
+      );
+    }
+
+    await this.prisma.student.update({
+      where: { id: studentId },
+      data: { password: await bcrypt.hash(dto.newPassword, 10) },
+    });
+    return { message: 'Password changed successfully.' };
+  }
+
   private maskContact(contact: string): string {
     if (contact.includes('@')) {
       const [name, domain] = contact.split('@');

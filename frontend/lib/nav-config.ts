@@ -10,6 +10,7 @@ import {
   BarChart3,
   Star,
   ShieldAlert,
+  KeyRound,
   /* ...icons zako zilizopo tayari... */
 } from "lucide-react";
 import {
@@ -170,6 +171,18 @@ export const navItems: NavItem[] = [
     allow: ["super_admin", "accountant"],
   },
   {
+    label: "Student Passwords",
+    href: "/dashboard/students",
+    icon: KeyRound,
+    allow: ["super_admin", "warden"],
+  },
+  {
+    label: "Change Password",
+    href: "/dashboard/change-password",
+    icon: KeyRound,
+    allow: ["student"],
+  },
+  {
     label: "Audit Log",
     href: "/dashboard/audit-log",
     icon: ShieldAlert,
@@ -202,6 +215,8 @@ const GROUPS: Record<string, string> = {
   "Manage Maintenance": "Support",
   Reports: "Insights",
   "Audit Log": "Insights",
+  "Student Passwords": "Setup",
+  "Change Password": "Main",
 };
 const ORDER = ["Main", "Hostel", "Finance", "Community", "Support", "Setup", "Insights"];
 for (const item of navItems) item.group = GROUPS[item.label] ?? "Main";
