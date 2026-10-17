@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { api } from "../../../lib/api";
 import { useLang } from "../../../lib/i18n";
+import { useAuth } from "../../../lib/auth-context";
 
 interface Hostel {
   id: string;
@@ -118,6 +119,8 @@ function MediaPreview({
 
 export default function ChatManagePage() {
   const { t } = useLang();
+  const { user } = useAuth();
+  const canDelete = user?.type === "admin" && (user.role === "super_admin" || user.role === "warden");
   const [hostels, setHostels] = useState<Hostel[]>([]);
   const [selectedHostelId, setSelectedHostelId] = useState(""); // "" = All Hostels
 
@@ -168,6 +171,7 @@ export default function ChatManagePage() {
   }
 
   async function deleteMessage(id: string) {
+    if (!window.confirm(t("Delete this message permanently?"))) return;
     setDeletingId(id);
     try {
       await api.delete(`/chat/admin/${id}`);
@@ -285,10 +289,11 @@ export default function ChatManagePage() {
                       {new Date(m.createdAt).toLocaleString()}
                     </p>
                   </div>
+                  {canDelete && (
                   <button
                     onClick={() => deleteMessage(m.id)}
                     disabled={deletingId === m.id}
-                    className="flex-shrink-0 rounded-lg p-1.5 text-ink-light opacity-0 transition-colors hover:bg-danger-50 hover:text-danger-600 group-hover:opacity-100 disabled:opacity-60"
+                    className="flex-shrink-0 rounded-lg p-1.5 text-ink-light transition-colors hover:bg-danger-50 hover:text-danger-600 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 disabled:opacity-60"
                     title={t("Delete message")}
                   >
                     {deletingId === m.id ? (
@@ -297,6 +302,7 @@ export default function ChatManagePage() {
                       <Trash2 size={14} />
                     )}
                   </button>
+                  )}
                 </motion.div>
               ))
             )}
