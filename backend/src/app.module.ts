@@ -20,6 +20,7 @@ import { RatingsModule } from './ratings/ratings.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
 import { StudentsModule } from './students/students.module';
+import { RegistryModule } from './registry/registry.module';
 import { SetupModule } from './setup/setup.module';
 
 @Module({
@@ -44,6 +45,7 @@ import { SetupModule } from './setup/setup.module';
     NotificationsModule,
     AuditLogModule,
     StudentsModule,
+    RegistryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -11,6 +11,7 @@ import { randomInt } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { EmailService } from '../email/email.service';
+import { RegistryService } from '../registry/registry.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
@@ -25,11 +26,31 @@ export class AuthService {
     private jwtService: JwtService,
     private notificationsService: NotificationsService,
     private emailService: EmailService,
+    private registryService: RegistryService,
   ) {}
  
+  /** Student by Reg. No., tolerant of spaces/case once RUCU's list exists. */
+  private async findStudentByRegNo(typed: string) {
+    const exact = await this.prisma.student.findUnique({ where: { regNo: typed } });
+    if (exact) return exact;
+    const official = await this.registryService.officialRegNo(typed);
+    if (!official || official === typed) return null;
+    return this.prisma.student.findUnique({ where: { regNo: official } });
+  }
+
   async register(dto: RegisterDto) {
+    // Details must match RUCU's own record (once the list has been uploaded).
+    const check = await this.registryService.verify(dto);
+    if (!check.ok) {
+      throw new BadRequestException(
+        "Your details do not match RUCU's student records. Check your Reg. No., full name, course and year exactly as they appear in SIMS, then try again.",
+      );
+    }
+    const official = check.record;
+    const regNo = official ? official.regNo : dto.regNo;
+
     const existing = await this.prisma.student.findUnique({
-      where: { regNo: dto.regNo },
+      where: { regNo },
     });
  
     if (existing) {
@@ -40,11 +61,11 @@ export class AuthService {
  
     const student = await this.prisma.student.create({
       data: {
-        regNo: dto.regNo,
-        name: dto.name,
+        regNo,
+        name: official ? official.name : dto.name,
         gender: dto.gender,
-        course: dto.course,
-        year: dto.year,
+        course: official ? official.course : dto.course,
+        year: official ? official.year : dto.year,
         phone: dto.phone,
         email: dto.email,
         password: hashedPassword,
@@ -69,9 +90,7 @@ export class AuthService {
   // LOGIN MOJA KWA WOTE: hujaribu kwanza kama ni mwanafunzi (RegNo),
   // kisha kama si hivyo, hujaribu kama ni admin/accountant/warden (username).
   async login(dto: LoginDto) {
-    const student = await this.prisma.student.findUnique({
-      where: { regNo: dto.identifier },
-    });
+    const student = await this.findStudentByRegNo(dto.identifier);
  
     if (student) {
       const passwordMatches = await bcrypt.compare(
@@ -117,9 +136,7 @@ export class AuthService {
   }
  
   async forgotPassword(dto: ForgotPasswordDto) {
-    const student = await this.prisma.student.findUnique({
-      where: { regNo: dto.regNo },
-    });
+    const student = await this.findStudentByRegNo(dto.regNo);
 
     // Same response whether or not the account exists / has an email, so the
     // endpoint can't be used to discover valid registration numbers. The OTP

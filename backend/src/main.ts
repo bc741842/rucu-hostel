@@ -1,10 +1,16 @@
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
  
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // rawBody: the payment webhook must verify a signature over the exact bytes sent.
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    rawBody: true,
+  });
+  // Allow a full RUCU student list (CSV text) to be uploaded in one request.
+  app.useBodyParser('json', { limit: '5mb' });
  
   // Ruhusu frontend (Next.js, port tofauti) kuongea na backend hii.
   // Anwani ya frontend yako ya kwenye hosting (Netlify).

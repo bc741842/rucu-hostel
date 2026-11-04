@@ -177,6 +177,12 @@ export const navItems: NavItem[] = [
     allow: ["super_admin", "warden"],
   },
   {
+    label: "RUCU Student List",
+    href: "/dashboard/registry",
+    icon: ClipboardList,
+    allow: ["super_admin"],
+  },
+  {
     label: "Change Password",
     href: "/dashboard/change-password",
     icon: KeyRound,
@@ -216,6 +222,7 @@ const GROUPS: Record<string, string> = {
   Reports: "Insights",
   "Audit Log": "Insights",
   "Student Passwords": "Setup",
+  "RUCU Student List": "Setup",
   "Change Password": "Main",
 };
 const ORDER = ["Main", "Hostel", "Finance", "Community", "Support", "Setup", "Insights"];

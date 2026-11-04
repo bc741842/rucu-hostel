@@ -64,6 +64,21 @@ model Student {
   @@map("students")
 }
 
+// RUCU's official student list, uploaded by the super admin. New accounts must
+// match a row here (when the table is not empty).
+model RegisteredStudent {
+  id         String   @id @default(uuid())
+  regKey     String   @unique @map("reg_key") // upper-case, no spaces
+  regNo      String   @map("reg_no")          // as the registrar writes it
+  name       String
+  course     String
+  year       Int
+  gender     String?
+  importedAt DateTime @default(now()) @map("imported_at")
+
+  @@map("registered_students")
+}
+
 model Hostel {
   id             String         @id @default(uuid())
   name           String

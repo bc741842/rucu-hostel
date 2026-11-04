@@ -58,7 +58,7 @@ export default function RegisterPage() {
       setError(
         Array.isArray(messages)
           ? messages.join(", ")
-          : messages || t("Registration failed. Please check your details."),
+          : (messages ? t(messages) : t("Registration failed. Please check your details.")),
       );
     } finally {
       setSubmitting(false);
